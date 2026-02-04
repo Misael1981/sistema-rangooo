@@ -16,7 +16,7 @@ const signupHighlights = [
 
 export default function CadastroPage() {
   return (
-    <main className="min-h-[80vh] overflow-hidden bg-linear-to-br from-orange-50 via-red-50 to-purple-50 space-y-12">
+    <main className="min-h-[80vh] overflow-hidden bg-linear-to-br from-orange-50 via-red-50 to-purple-50 space-y-12 px-4 pb-8">
       <section className="flex flex-col items-center justify-center gap-2 px-4 pt-8">
         <div className="max-w-[80%] text-center">
           <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl lg:text-4xl">
@@ -36,7 +36,7 @@ export default function CadastroPage() {
           ))}
         </ul>
       </section>
-      <section className="flex items-center justify-center gap-8 px-4 pt-8">
+      <section className="flex items-center justify-center">
         <CustomerRegistration />
       </section>
     </main>

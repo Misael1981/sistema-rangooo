@@ -21,6 +21,6 @@ export const formSchema = z.object({
     .length(2, {
       message: "Estado deve ter 2 caracteres (ex: SP, RJ).",
     })
-    .transform((s) => s.toUpperCase()),
+    .toUpperCase(),
   notes: z.string().optional(),
 });
