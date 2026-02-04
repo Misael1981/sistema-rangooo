@@ -1,9 +1,34 @@
+"use client";
+
+import { formSchema } from "@/schemas/lead-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
+
 const CustomerRegistration = () => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      restaurantName: "",
+      city: "",
+      state: "",
+      notes: "",
+    },
+  });
   return (
     <section>
-      <h1 className="text-2xl font-bold leading-tight text-gray-900 md:text-3xl lg:text-4xl">
-        Cadastro do Cliente
-      </h1>
+      <Card className="mx-auto w-full max-w-3xl border border-orange-500 p-6">
+        <CardTitle className="text-2xl font-bold">
+          Cadastro do Estabelecimento
+        </CardTitle>
+        <CardDescription>
+          Preencha os dados abaixo para começar seus 7 dias grátis no Rangooo
+        </CardDescription>
+        <CardContent></CardContent>
+      </Card>
     </section>
   );
 };
