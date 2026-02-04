@@ -38,12 +38,6 @@ export default function CadastroPage() {
       </section>
       <section className="flex items-center justify-center gap-8 px-4 pt-8">
         <CustomerRegistration />
-        {/* <Image
-            src="/images/cadastro.png"
-            alt="Cadastro"
-            width={600}
-            height={400}
-          /> */}
       </section>
     </main>
   );

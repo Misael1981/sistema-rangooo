@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/src/components/ui/card";
 import { FaRobot } from "react-icons/fa";
 import { FcSmartphoneTablet, FcPrint } from "react-icons/fc";
 import { MdLoyalty } from "react-icons/md";
