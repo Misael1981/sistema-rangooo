@@ -197,7 +197,7 @@ const CustomerRegistration = () => {
                       control={form.control}
                       render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor="state">Estado (UF) *</FieldLabel>
+                          <FieldLabel htmlFor="state">(UF)</FieldLabel>
                           <Input
                             {...field}
                             id="state"
