@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,70 +9,57 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { linksPage } from "@/helpers/links-page-menu";
 import { Menu } from "lucide-react";
 import Link from "next/link";
-
-const linksPage = [
-  {
-    id: 1,
-    href: "#",
-    label: "Sobre nós",
-  },
-  {
-    id: 2,
-    href: "#",
-    label: "Preços",
-  },
-  {
-    id: 3,
-    href: "#",
-    label: "Contato",
-  },
-];
+import { useState } from "react";
 
 const HeaderSheet = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
+      {" "}
+      {/* 3. Vincular o estado */}
       <SheetTrigger asChild>
         <Button
           variant="outline"
           className="group relative overflow-hidden border border-orange-600 bg-white p-3 transition-all duration-300 hover:border-orange-300 hover:shadow-lg active:scale-95 lg:hidden"
         >
-          {/* Efeito de brilho no hover */}
-          <div className="absolute inset-0 translate-x-full bg-linear-to-r from-orange-500/0 via-orange-500/10 to-orange-500/0 transition-transform duration-1000 group-hover:translate-x-full" />
-
           <Menu className="relative z-10 h-6 w-6 text-orange-600 transition-all duration-300 group-hover:scale-110 group-hover:text-orange-700" />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="w-[90%]">
         <SheetHeader>
           <SheetTitle>Rangooo</SheetTitle>
           <SheetDescription>
-            A plataforma Rangooo é uma ferramenta que ajuda você a gerenciar
-            seus projetos de forma eficiente e organizada.
+            Gerencie seu estabelecimento de forma eficiente.
           </SheetDescription>
         </SheetHeader>
         <nav className="w-full p-4">
-          <ul className="w-full space-y-4 font-bold lg:flex lg:items-center lg:gap-6 lg:space-y-0">
-            <li className="border-b border-orange-300 py-2 text-lg lg:border-b-0 lg:p-0 lg:hover:border-b">
+          <ul className="w-full space-y-4 font-bold">
+            <li className="border-b border-orange-300 py-2 text-lg">
               <Link
-                href="/"
-                className="text-orange-600 transition-all duration-300 group-hover:text-orange-700"
+                href="https://rangooo.vercel.app/"
+                onClick={() => setOpen(false)}
+                className="text-orange-600"
               >
-                Página de Pedidos
+                App Rangooo
               </Link>
             </li>
+
             {linksPage.map((item) => (
               <li
                 key={item.id}
-                className="border-b border-orange-300 py-2 text-lg lg:border-b-0 lg:p-0 lg:hover:border-b"
+                className="border-b border-orange-300 py-2 text-lg"
               >
-                <a
+                <Link
                   href={item.href}
-                  className="text-orange-600 transition-all duration-300 group-hover:text-orange-700"
+                  onClick={() => setOpen(false)}
+                  className="text-orange-600 block w-full"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

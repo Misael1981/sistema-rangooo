@@ -1,17 +1,22 @@
 export const linksPage = [
   {
     id: 1,
-    href: "#",
-    label: "Sobre nós",
+    href: "/",
+    label: "Home",
   },
   {
     id: 2,
-    href: "#",
-    label: "Preços",
+    href: "#about",
+    label: "Sobre nós",
   },
   {
     id: 3,
-    href: "#",
+    href: "#plans",
+    label: "Planos",
+  },
+  {
+    id: 4,
+    href: "#contact",
     label: "Contato",
   },
 ];

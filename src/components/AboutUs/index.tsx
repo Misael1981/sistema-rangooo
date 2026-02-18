@@ -3,7 +3,7 @@ import WaveDivider from "./components/WaveDivider";
 
 const AboutUs = () => {
   return (
-    <section className="">
+    <section className="" id="about">
       <div className="mx-auto max-w-7xl space-y-4 px-4 py-10 text-center">
         <h2 className="text-4xl font-bold text-gray-900 lg:text-5xl">
           Mas, o que é a plataforma{" "}

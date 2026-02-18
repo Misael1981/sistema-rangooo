@@ -7,7 +7,7 @@ const msgWhatsapp =
 const FinalCount = () => {
   return (
     <footer
-      id="planos"
+      id="contact"
       className="bg-linear-to-r from-orange-500 to-red-500 py-20"
     >
       <div className="mx-auto max-w-4xl px-4 text-center text-white">
