@@ -1,3 +1,5 @@
+"use client";
+
 import { startOnboarding } from "@/app/_actions/start-onboarding";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +21,13 @@ import { formatPhoneNumber } from "@/helpers/format-phone-number";
 import { ownerSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
 type Step1OwnerDataProps = {
+  restaurantId?: string | null;
   token: string;
   data: {
     name: string;
@@ -32,10 +36,12 @@ type Step1OwnerDataProps = {
     phone: string;
     onboardingStep?: number;
   };
-  onSuccess: (newId: string) => void;
+  onSuccess: (id: string, updatedValues: z.infer<typeof ownerSchema>) => void;
 };
 
 const Step1OwnerData = ({ token, data, onSuccess }: Step1OwnerDataProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof ownerSchema>>({
     resolver: zodResolver(ownerSchema),
     defaultValues: {
@@ -48,14 +54,15 @@ const Step1OwnerData = ({ token, data, onSuccess }: Step1OwnerDataProps) => {
   const onSubmit = async (values: z.infer<typeof ownerSchema>) => {
     const result = await startOnboarding(token, values);
 
+    if (result.success) {
+      toast.success("Dados salvos! Vamos configurar o estabelecimento.");
+      router.refresh();
+      onSuccess(result.restaurantId, values);
+    }
+
     if (result.error) {
       toast.error(result.error);
       return;
-    }
-
-    if (result.success && result.restaurantId) {
-      toast.success("Dados salvos! Vamos configurar o estabelecimento.");
-      onSuccess(result.restaurantId);
     }
   };
 

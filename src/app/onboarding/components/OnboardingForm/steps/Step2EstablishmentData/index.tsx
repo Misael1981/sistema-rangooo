@@ -28,6 +28,7 @@ const Step2EstablishmentData = ({
   onSuccess,
   onBack,
 }: Step2EstablishmentDataProps) => {
+  console.log("Step2EstablishmentData: ", data);
   return (
     <Card>
       <CardHeader>

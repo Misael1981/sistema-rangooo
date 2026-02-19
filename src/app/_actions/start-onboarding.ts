@@ -58,7 +58,11 @@ export async function startOnboarding(
 
       await db.leadApplication.update({
         where: { id: invite.leadId },
-        data: {},
+        data: {
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+        },
       });
     }
 

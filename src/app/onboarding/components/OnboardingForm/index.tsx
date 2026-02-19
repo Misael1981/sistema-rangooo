@@ -5,6 +5,8 @@ import Step1OwnerData from "./steps/Step1OwnerData";
 import Step2EstablishmentData from "./steps/Step2EstablishmentData";
 import Step3MenuEstablishmentData from "./steps/Step3MenuEstablishmentData";
 import Step4Confirmation from "./steps/Step4Confirmation";
+import { ownerSchema } from "@/schemas/onboarding-schema";
+import z from "zod";
 
 type OnboardingFormProps = {
   token: string;
@@ -18,6 +20,8 @@ type OnboardingFormProps = {
   restaurantId?: string;
 };
 
+type OwnerValues = z.infer<typeof ownerSchema>;
+
 export default function OnboardingForm({
   token,
   initialData,
@@ -29,10 +33,15 @@ export default function OnboardingForm({
   const [activeRestaurantId, setActiveRestaurantId] = useState<string | null>(
     restaurantId || null,
   );
+  const [formData, setFormData] = useState(initialData);
 
-  const handleStep1Success = (newId: string) => {
-    console.log(activeRestaurantId);
-    setActiveRestaurantId(newId);
+  const handleStep1Success = (id: string, updatedValues: OwnerValues) => {
+    setActiveRestaurantId(id);
+    setFormData((prev) => ({
+      ...prev,
+      ...updatedValues,
+    }));
+
     nextStep();
   };
 
@@ -52,9 +61,10 @@ export default function OnboardingForm({
 
       {currentStep === 1 && (
         <Step1OwnerData
-          data={initialData}
-          onSuccess={handleStep1Success}
+          restaurantId={activeRestaurantId}
           token={token}
+          data={formData}
+          onSuccess={handleStep1Success}
         />
       )}
 
