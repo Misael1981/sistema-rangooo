@@ -30,10 +30,13 @@ import {
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { submitApplication } from "@/app/_actions/apply";
+import { useRouter } from "next/navigation";
 
 type FormValues = z.infer<typeof formSchema>;
 
 const CustomerRegistration = () => {
+  const router = useRouter();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,8 +58,11 @@ const CustomerRegistration = () => {
       return;
     }
 
-    toast.success("Solicitação enviada! Entraremos em contato em breve.");
-    form.reset();
+    const params = new URLSearchParams({
+      name: result.name || "",
+      restaurant: result.restaurantName || "",
+    });
+    router.push(`/cadastro/sucesso?${params.toString()}`);
   };
 
   return (
