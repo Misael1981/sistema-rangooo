@@ -17,16 +17,16 @@ model User {
   addresses          Address[]
   isProfileCompleted Boolean   @default(false)
 
-  role Role @default(CLIENT)
+  role               Role      @default(CLIENT)
 
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  password        String?          @map("hashed_password")
-  orders          Order[]
-  restaurants     Restaurant[]
-  restaurantRoles RestaurantUser[]
-  accounts        Account[]
-  sessions        Session[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  password           String?          @map("hashed_password")
+  orders             Order[]
+  restaurants        Restaurant[]
+  restaurantRoles    RestaurantUser[]
+  accounts           Account[]
+  sessions           Session[]
 
   @@map("users")
 }
