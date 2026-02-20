@@ -7,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { menuReducer } from "@/reducers/menuReducer";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useReducer } from "react";
+import MenuCategoriesList from "./components/MenuCategoriesList";
 
 type Step3MenuEstablishmentDataProps = {
   restaurantId?: string;
@@ -28,6 +31,11 @@ const Step3MenuEstablishmentData = ({
   onSuccess,
   onBack,
 }: Step3MenuEstablishmentDataProps) => {
+  const [state, dispatch] = useReducer(menuReducer, {
+    categories: [],
+    selectedCategoryId: "",
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -37,7 +45,9 @@ const Step3MenuEstablishmentData = ({
           itens que ficarão disponíveis para seus clientes realizarem pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <MenuCategoriesList />
+      </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
         <Button onClick={onBack} variant="outline">
           <ArrowLeft />
