@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import GeneralInformation from "./components/GeneralInformation";
 
 type Step2EstablishmentDataProps = {
   restaurantId?: string;
@@ -23,7 +24,6 @@ type Step2EstablishmentDataProps = {
 };
 
 const Step2EstablishmentData = ({
-  restaurantId,
   data,
   onSuccess,
   onBack,
@@ -32,14 +32,18 @@ const Step2EstablishmentData = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Step 2 - Informações do Estabelecimento</CardTitle>
+        <CardTitle className="text-xl">
+          Step 2 - Informações do Estabelecimento
+        </CardTitle>
         <CardDescription>
           Agora vamos configurar os dados do seu estabelecimento, como nome,
           endereço, identidade visual e link personalizado... Essas informações
           serão exibidas para seus clientes.
         </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <GeneralInformation />
+      </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
         <Button onClick={onBack} variant="outline">
           <ArrowLeft />

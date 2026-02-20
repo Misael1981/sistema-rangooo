@@ -341,9 +341,7 @@ enum RestaurantCategory {
   PIZZARIA
   HAMBURGUERIA
   SORVETERIA
-  ACAI
-  SAUDAVEL
-  DOCES
+  ADEGA
 }
 
 enum Role {
