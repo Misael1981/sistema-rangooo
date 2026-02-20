@@ -44,3 +44,12 @@ export const establishmentContactInfoSchema = z.object({
     }),
   ),
 });
+
+export const gallerySchema = z.object({
+  avatarImageUrl: z
+    .union([z.string(), z.any()])
+    .refine((val) => val, "Imagem de perfil obrigatória"),
+  coverImageUrl: z
+    .union([z.string(), z.any()])
+    .refine((val) => val, "Imagem de capa obrigatória"),
+});

@@ -37,9 +37,15 @@ type Step1OwnerDataProps = {
     onboardingStep?: number;
   };
   onSuccess: (id: string, updatedValues: z.infer<typeof ownerSchema>) => void;
+  nextStep: () => void;
 };
 
-const Step1OwnerData = ({ token, data, onSuccess }: Step1OwnerDataProps) => {
+const Step1OwnerData = ({
+  token,
+  data,
+  onSuccess,
+  nextStep,
+}: Step1OwnerDataProps) => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof ownerSchema>>({
@@ -52,18 +58,20 @@ const Step1OwnerData = ({ token, data, onSuccess }: Step1OwnerDataProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof ownerSchema>) => {
-    const result = await startOnboarding(token, values);
+    // const result = await startOnboarding(token, values);
 
-    if (result.success) {
-      toast.success("Dados salvos! Vamos configurar o estabelecimento.");
-      router.refresh();
-      onSuccess(result.restaurantId, values);
-    }
+    // if (result.success) {
+    //   toast.success("Dados salvos! Vamos configurar o estabelecimento.");
+    //   router.refresh();
+    //   onSuccess(result.restaurantId, values);
+    // }
 
-    if (result.error) {
-      toast.error(result.error);
-      return;
-    }
+    // if (result.error) {
+    //   toast.error(result.error);
+    //   return;
+    // }
+    nextStep();
+    console.log(values);
   };
 
   return (

@@ -65,6 +65,7 @@ export default function OnboardingForm({
           token={token}
           data={formData}
           onSuccess={handleStep1Success}
+          nextStep={nextStep}
         />
       )}
 
