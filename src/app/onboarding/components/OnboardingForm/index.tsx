@@ -28,7 +28,7 @@ export default function OnboardingForm({
   restaurantId,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
-    initialData.onboardingStep || 1,
+    initialData.onboardingStep ?? 1,
   );
   const [activeRestaurantId, setActiveRestaurantId] = useState<string | null>(
     restaurantId || null,
@@ -45,8 +45,12 @@ export default function OnboardingForm({
     nextStep();
   };
 
+  console.log("No OnboardingForm:  ", initialData.onboardingStep);
+
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
+
+  console.log("Active Restaurant ID:", activeRestaurantId);
 
   return (
     <div className="space-y-8 bg-white p-8 rounded-xl shadow-sm border">
@@ -61,7 +65,6 @@ export default function OnboardingForm({
 
       {currentStep === 1 && (
         <Step1OwnerData
-          restaurantId={activeRestaurantId}
           token={token}
           data={formData}
           onSuccess={handleStep1Success}
@@ -71,7 +74,7 @@ export default function OnboardingForm({
 
       {currentStep === 2 && (
         <Step2EstablishmentData
-          restaurantId={restaurantId}
+          restaurantId={activeRestaurantId}
           data={initialData}
           onSuccess={nextStep}
           onBack={prevStep}
@@ -80,7 +83,7 @@ export default function OnboardingForm({
 
       {currentStep === 3 && (
         <Step3MenuEstablishmentData
-          restaurantId={restaurantId}
+          restaurantId={activeRestaurantId}
           data={initialData}
           onSuccess={nextStep}
           onBack={prevStep}
@@ -89,7 +92,7 @@ export default function OnboardingForm({
 
       {currentStep === 4 && (
         <Step4Confirmation
-          restaurantId={restaurantId}
+          restaurantId={activeRestaurantId}
           data={initialData}
           onSuccess={nextStep}
           onBack={prevStep}

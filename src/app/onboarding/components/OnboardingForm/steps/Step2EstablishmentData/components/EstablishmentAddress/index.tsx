@@ -4,11 +4,16 @@ import { Input } from "@/components/ui/input";
 import { establishmentAddressSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 type AddressFormValues = z.infer<typeof establishmentAddressSchema>;
 
-const EstablishmentAddress = () => {
+type EstablishmentAddressProps = {
+  onUpdate: (data: AddressFormValues) => void;
+};
+
+const EstablishmentAddress = ({ onUpdate }: EstablishmentAddressProps) => {
   const {
     register,
     handleSubmit,
@@ -46,7 +51,8 @@ const EstablishmentAddress = () => {
   };
 
   const onSubmit = async (data: AddressFormValues) => {
-    console.log(data);
+    onUpdate(data);
+    toast.success("Endereço atualizado com sucesso!");
   };
 
   return (
@@ -126,7 +132,11 @@ const EstablishmentAddress = () => {
           </Field>
         </div>
 
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={Object.keys(errors).length > 0}
+        >
           Salvar Endereço
         </Button>
       </form>

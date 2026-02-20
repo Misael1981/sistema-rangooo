@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import z from "zod";
 
 type Step1OwnerDataProps = {
-  restaurantId?: string | null;
   token: string;
   data: {
     name: string;
@@ -58,20 +57,18 @@ const Step1OwnerData = ({
   });
 
   const onSubmit = async (values: z.infer<typeof ownerSchema>) => {
-    // const result = await startOnboarding(token, values);
+    const result = await startOnboarding(token, values);
 
-    // if (result.success) {
-    //   toast.success("Dados salvos! Vamos configurar o estabelecimento.");
-    //   router.refresh();
-    //   onSuccess(result.restaurantId, values);
-    // }
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
 
-    // if (result.error) {
-    //   toast.error(result.error);
-    //   return;
-    // }
-    nextStep();
-    console.log(values);
+    if (result.success) {
+      toast.success("Dados salvos! Vamos configurar o estabelecimento.");
+      router.refresh();
+      onSuccess(result.restaurantId, values);
+    }
   };
 
   return (

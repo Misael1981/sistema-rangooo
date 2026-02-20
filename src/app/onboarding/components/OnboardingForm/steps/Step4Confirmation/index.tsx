@@ -10,7 +10,7 @@ import {
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Step4ConfirmationProps = {
-  restaurantId?: string;
+  restaurantId?: string | null;
   data: {
     name: string;
     email: string;

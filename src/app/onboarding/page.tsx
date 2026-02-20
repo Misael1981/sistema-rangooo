@@ -26,6 +26,14 @@ export default async function OnboardingPage({
     redirect("/login?message=Este convite já foi utilizado.");
   }
 
+  const existingRestaurant = await db.restaurant.findFirst({
+    where: {
+      owner: {
+        email: invite.email,
+      },
+    },
+  });
+
   const isExpired = new Date() > invite.expiresAt;
   if (isExpired) {
     return (
@@ -61,6 +69,7 @@ export default async function OnboardingPage({
             email: invite.lead.email,
             restaurantName: invite.lead.restaurantName,
             phone: invite.lead.phone,
+            onboardingStep: existingRestaurant?.onboardingStep ?? 1,
           }}
         />
       </div>

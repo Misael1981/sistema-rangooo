@@ -117,6 +117,7 @@ model LeadApplication {
 model EnrollmentInvite {
   id        String          @id @default(cuid())
   leadId    String
+  restaurantId String?
   email     String
   token     String          @unique
   expiresAt DateTime
@@ -138,8 +139,8 @@ model Restaurant {
   description        String?
   avatarImageUrl     String?
   coverImageUrl      String?
-  latitude           Decimal
-  longitude          Decimal
+  latitude           Decimal?
+  longitude          Decimal?
   isOpen             Boolean                       @default(true)
   createdAt          DateTime                      @default(now())
   updatedAt          DateTime                      @updatedAt
@@ -160,6 +161,7 @@ model Restaurant {
   printerType        String?
   printingToken      String?                       @unique
   deliveryFee        Decimal?                      @db.Decimal(6, 2)
+  onboardingCompleted Boolean @default(false)
   category           RestaurantCategory            @default(RESTAURANT)
   businessHours      BusinessHours[]
   contacts           ContactNumber[]
@@ -170,6 +172,7 @@ model Restaurant {
   consumptionMethods RestaurantConsumptionMethod[]
   paymentMethods     RestaurantPaymentMethod[]
   users              RestaurantUser[]
+  publishedAt        DateTime?
 
   @@index([ownerId])
 }

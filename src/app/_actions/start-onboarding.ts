@@ -1,7 +1,19 @@
 "use server";
 
 import db from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+
+function generateSlug(name: string) {
+  const base = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]+/g, "");
+
+  const random = Math.random().toString(36).substring(2, 6);
+
+  return `${base}-${random}`;
+}
 
 export async function startOnboarding(
   token: string,
@@ -13,10 +25,15 @@ export async function startOnboarding(
       include: { lead: true },
     });
 
-    if (!invite || invite.usedAt) {
-      return { error: "Convite inválido ou já utilizado." };
+    if (!invite) {
+      return { error: "Convite inválido." };
     }
 
+    if (invite.usedAt) {
+      return { error: "Este convite já foi utilizado." };
+    }
+
+    // 1️⃣ Criar ou atualizar usuário
     const owner = await db.user.upsert({
       where: { email: values.email },
       update: {
@@ -30,43 +47,45 @@ export async function startOnboarding(
       },
     });
 
-    let restaurant = await db.restaurant.findFirst({
-      where: {
-        ownerId: owner.id,
-        name: invite.lead.restaurantName,
-      },
-    });
+    let restaurant;
 
-    if (restaurant) {
-      restaurant = await db.restaurant.update({
-        where: { id: restaurant.id },
-        data: {
-          onboardingStep: 2,
-        },
+    // 2️⃣ Se o invite já estiver vinculado a um restaurante, usamos ele
+    if (invite.restaurantId) {
+      restaurant = await db.restaurant.findUnique({
+        where: { id: invite.restaurantId },
       });
+
+      if (!restaurant) {
+        return { error: "Restaurante vinculado não encontrado." };
+      }
     } else {
+      // 3️⃣ Criar restaurante novo
       restaurant = await db.restaurant.create({
         data: {
           name: invite.lead.restaurantName,
           ownerId: owner.id,
-          slug: `${invite.lead.restaurantName.toLowerCase().replace(/\s+/g, "-")}-${Math.random().toString(36).substring(7)}`,
+          slug: generateSlug(invite.lead.restaurantName),
           onboardingStep: 2,
-          latitude: 0,
-          longitude: 0,
         },
       });
 
-      await db.leadApplication.update({
-        where: { id: invite.leadId },
+      // 4️⃣ Vincular restaurante ao invite
+      await db.enrollmentInvite.update({
+        where: { id: invite.id },
         data: {
-          name: values.name,
-          email: values.email,
-          phone: values.phone,
+          restaurantId: restaurant.id,
+        },
+      });
+
+      // 5️⃣ Criar vínculo na tabela RestaurantUser
+      await db.restaurantUser.create({
+        data: {
+          userId: owner.id,
+          restaurantId: restaurant.id,
+          role: "OWNER",
         },
       });
     }
-
-    revalidatePath("/onboarding");
 
     return {
       success: true,
@@ -74,7 +93,7 @@ export async function startOnboarding(
       ownerId: owner.id,
     };
   } catch (error) {
-    console.error("Erro no StartOnboarding:", error);
-    return { error: "Erro ao processar seus dados. Tente novamente." };
+    console.error("Erro no startOnboarding:", error);
+    return { error: "Erro ao iniciar o onboarding." };
   }
 }

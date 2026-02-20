@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,9 +14,10 @@ import GeneralInformation from "./components/GeneralInformation";
 import EstablishmentAddress from "./components/EstablishmentAddress";
 import EstablishmentContacts from "./components/EstablishmentContacts";
 import GalleryEstablishment from "./components/GalleryEstablishment";
+import { useState } from "react";
 
 type Step2EstablishmentDataProps = {
-  restaurantId?: string;
+  restaurantId?: string | null;
   data: {
     name: string;
     email: string;
@@ -31,7 +34,17 @@ const Step2EstablishmentData = ({
   onSuccess,
   onBack,
 }: Step2EstablishmentDataProps) => {
-  console.log("Step2EstablishmentData: ", data);
+  const [formData, setFormData] = useState({
+    general: {},
+    address: {},
+    contacts: [],
+    gallery: [],
+  });
+
+  const handleUpdate = (key: string, data: any) => {
+    setFormData((prev) => ({ ...prev, [key]: data }));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -45,9 +58,13 @@ const Step2EstablishmentData = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
-        <GeneralInformation />
+        <GeneralInformation
+          onUpdate={(data) => handleUpdate("general", data)}
+        />
 
-        <EstablishmentAddress />
+        <EstablishmentAddress
+          onUpdate={(data) => handleUpdate("general", data)}
+        />
 
         <EstablishmentContacts />
 

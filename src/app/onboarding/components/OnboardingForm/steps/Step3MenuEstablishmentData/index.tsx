@@ -13,7 +13,7 @@ import { useReducer } from "react";
 import MenuCategoriesList from "./components/MenuCategoriesList";
 
 type Step3MenuEstablishmentDataProps = {
-  restaurantId?: string;
+  restaurantId?: string | null;
   data: {
     name: string;
     email: string;

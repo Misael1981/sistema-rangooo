@@ -16,6 +16,7 @@ import { generalInfoSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const RestaurantCategory = [
@@ -26,7 +27,11 @@ const RestaurantCategory = [
   "ADEGA",
 ] as const;
 
-const GeneralInformation = () => {
+type GeneralInformationProps = {
+  onUpdate: (data: z.infer<typeof generalInfoSchema>) => void;
+};
+
+const GeneralInformation = ({ onUpdate }: GeneralInformationProps) => {
   const form = useForm<z.infer<typeof generalInfoSchema>>({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
@@ -58,7 +63,8 @@ const GeneralInformation = () => {
   }, [name, form]);
 
   const onSubmit = (data: z.infer<typeof generalInfoSchema>) => {
-    console.log(data);
+    onUpdate(data);
+    toast.success("Dados atualizados com sucesso!");
   };
 
   return (
@@ -132,7 +138,11 @@ const GeneralInformation = () => {
         </Field>
 
         <div className="flex justify-end">
-          <Button type="submit" className="cursor-pointer w-full">
+          <Button
+            type="submit"
+            className="cursor-pointer w-full"
+            disabled={!form.formState.isValid}
+          >
             Salvar
           </Button>
         </div>
