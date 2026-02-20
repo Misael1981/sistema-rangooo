@@ -132,8 +132,8 @@ const GeneralInformation = () => {
         </Field>
 
         <div className="flex justify-end">
-          <Button type="submit" className="cursor-pointer bg-orange-300">
-            Salvar Alterações
+          <Button type="submit" className="cursor-pointer w-full">
+            Salvar
           </Button>
         </div>
       </form>
