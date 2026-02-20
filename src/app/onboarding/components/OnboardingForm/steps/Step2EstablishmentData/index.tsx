@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import GeneralInformation from "./components/GeneralInformation";
+import EstablishmentAddress from "./components/EstablishmentAddress";
 
 type Step2EstablishmentDataProps = {
   restaurantId?: string;
@@ -43,6 +44,8 @@ const Step2EstablishmentData = ({
       </CardHeader>
       <CardContent>
         <GeneralInformation />
+
+        <EstablishmentAddress />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
         <Button onClick={onBack} variant="outline">
