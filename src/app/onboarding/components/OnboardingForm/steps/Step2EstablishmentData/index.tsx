@@ -15,6 +15,22 @@ import EstablishmentAddress from "./components/EstablishmentAddress";
 import EstablishmentContacts from "./components/EstablishmentContacts";
 import GalleryEstablishment from "./components/GalleryEstablishment";
 import { useState } from "react";
+import {
+  establishmentAddressSchema,
+  establishmentContactInfoSchema,
+  gallerySchema,
+  generalInfoSchema,
+} from "@/schemas/onboarding-schema";
+import z from "zod";
+import { Restaurant } from "@prisma/client";
+
+type Step2Payload = {
+  restaurantId: string;
+  general: z.infer<typeof generalInfoSchema>;
+  address: z.infer<typeof establishmentAddressSchema>;
+  contacts: z.infer<typeof establishmentContactInfoSchema>;
+  gallery: z.infer<typeof gallerySchema>;
+};
 
 type Step2EstablishmentDataProps = {
   restaurantId?: string | null;
@@ -27,22 +43,68 @@ type Step2EstablishmentDataProps = {
   };
   onSuccess: () => void;
   onBack: () => void;
+  initialRestaurantData: Restaurant | null;
+};
+
+type SocialMedia = {
+  name: string;
+  url: string;
+};
+
+const parseSocialMedia = (value: unknown): SocialMedia[] => {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter(
+    (item): item is SocialMedia =>
+      typeof item === "object" &&
+      item !== null &&
+      "name" in item &&
+      "url" in item &&
+      typeof item.name === "string" &&
+      typeof item.url === "string",
+  );
 };
 
 const Step2EstablishmentData = ({
-  data,
   onSuccess,
   onBack,
+  initialRestaurantData,
 }: Step2EstablishmentDataProps) => {
-  const [formData, setFormData] = useState({
-    general: {},
-    address: {},
-    contacts: [],
-    gallery: [],
+  const [formData, setFormData] = useState<Step2Payload>({
+    restaurantId: initialRestaurantData?.id ?? "",
+    general: {
+      name: initialRestaurantData?.name ?? "",
+      description: initialRestaurantData?.description ?? "",
+      category: initialRestaurantData?.category ?? "RESTAURANT",
+      slug: initialRestaurantData?.slug ?? "",
+    },
+    address: {
+      street: initialRestaurantData?.street ?? "",
+      number: initialRestaurantData?.number ?? "",
+      neighborhood: initialRestaurantData?.neighborhood ?? "",
+      city: initialRestaurantData?.city ?? "",
+      state: initialRestaurantData?.state ?? "",
+      zipCode: initialRestaurantData?.zipCode ?? "",
+    },
+    contacts: {
+      contacts: [],
+      email: initialRestaurantData?.email ?? "",
+      socialMedia: parseSocialMedia(initialRestaurantData?.socialMedia),
+    },
+    gallery: {
+      avatarImageUrl: initialRestaurantData?.avatarImageUrl ?? "",
+      coverImageUrl: initialRestaurantData?.coverImageUrl ?? "",
+    },
   });
 
-  const handleUpdate = (key: string, data: any) => {
-    setFormData((prev) => ({ ...prev, [key]: data }));
+  const handleUpdate = <K extends keyof Step2Payload>(
+    key: K,
+    data: Step2Payload[K],
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: data,
+    }));
   };
 
   return (
@@ -60,15 +122,20 @@ const Step2EstablishmentData = ({
       <CardContent className="space-y-8">
         <GeneralInformation
           onUpdate={(data) => handleUpdate("general", data)}
+          defaultValues={formData.general}
         />
 
         <EstablishmentAddress
-          onUpdate={(data) => handleUpdate("general", data)}
+          onUpdate={(data) => handleUpdate("address", data)}
         />
 
-        <EstablishmentContacts />
+        <EstablishmentContacts
+          onUpdate={(data) => handleUpdate("contacts", data)}
+        />
 
-        <GalleryEstablishment />
+        <GalleryEstablishment
+          onUpdate={(data) => handleUpdate("gallery", data)}
+        />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
         <Button onClick={onBack} variant="outline">

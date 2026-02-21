@@ -18,7 +18,11 @@ import z from "zod";
 
 type ContactsFormValues = z.infer<typeof establishmentContactInfoSchema>;
 
-const EstablishmentContacts = () => {
+type EstablishmentContactsProps = {
+  onUpdate: (data: ContactsFormValues) => void;
+};
+
+const EstablishmentContacts = ({ onUpdate }: EstablishmentContactsProps) => {
   const {
     register,
     control,

@@ -34,6 +34,12 @@ export default async function OnboardingPage({
     },
   });
 
+  const restaurant = await db.restaurant.findFirst({
+    where: {
+      ownerId: invite.lead.id,
+    },
+  });
+
   const isExpired = new Date() > invite.expiresAt;
   if (isExpired) {
     return (
@@ -71,6 +77,7 @@ export default async function OnboardingPage({
             phone: invite.lead.phone,
             onboardingStep: existingRestaurant?.onboardingStep ?? 1,
           }}
+          initialRestaurantData={restaurant}
         />
       </div>
     </main>

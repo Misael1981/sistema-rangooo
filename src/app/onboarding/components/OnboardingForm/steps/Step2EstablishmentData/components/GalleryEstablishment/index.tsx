@@ -8,7 +8,11 @@ import z from "zod";
 
 type GalleryValue = z.infer<typeof gallerySchema>;
 
-const GalleryEstablishment = () => {
+type GalleryEstablishmentProps = {
+  onUpdate: (data: GalleryValue) => void;
+};
+
+const GalleryEstablishment = ({ onUpdate }: GalleryEstablishmentProps) => {
   const form = useForm<GalleryValue>({
     resolver: zodResolver(gallerySchema),
     defaultValues: {

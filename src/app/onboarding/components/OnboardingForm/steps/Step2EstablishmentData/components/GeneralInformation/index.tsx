@@ -14,12 +14,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { CATEGORY_LABELS } from "@/maps/maps-labels";
 import { generalInfoSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RestaurantCategory } from "@prisma/client";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-const RestaurantCategory = [
+const RestaurantCategoryList = [
   "RESTAURANT",
   "PIZZARIA",
   "HAMBURGUERIA",
@@ -28,19 +29,30 @@ const RestaurantCategory = [
 ] as const;
 
 type GeneralInformationProps = {
+  defaultValues?: z.infer<typeof generalInfoSchema>;
   onUpdate: (data: z.infer<typeof generalInfoSchema>) => void;
 };
 
-const GeneralInformation = ({ onUpdate }: GeneralInformationProps) => {
+const GeneralInformation = ({
+  onUpdate,
+  defaultValues,
+}: GeneralInformationProps) => {
   const form = useForm<z.infer<typeof generalInfoSchema>>({
     resolver: zodResolver(generalInfoSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
-      category: "RESTAURANT",
+      category: RestaurantCategory.RESTAURANT,
       slug: "",
       description: "",
     },
   });
+
+  useEffect(() => {
+    if (defaultValues && Object.keys(defaultValues).length > 0) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
 
   const name = useWatch({
     control: form.control,
@@ -98,7 +110,7 @@ const GeneralInformation = ({ onUpdate }: GeneralInformationProps) => {
                     <SelectValue placeholder="Selecione..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {RestaurantCategory.map((cat) => (
+                    {RestaurantCategoryList.map((cat) => (
                       <SelectItem key={cat} value={cat}>
                         {CATEGORY_LABELS[cat]}
                       </SelectItem>
