@@ -1,8 +1,10 @@
+import { saveEstablishmentData } from "@/app/_actions/save-establishment-data";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { establishmentAddressSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -11,26 +13,31 @@ type AddressFormValues = z.infer<typeof establishmentAddressSchema>;
 
 type EstablishmentAddressProps = {
   onUpdate: (data: AddressFormValues) => void;
+  restaurantId?: string;
+  defaultValues?: AddressFormValues;
 };
 
-const EstablishmentAddress = ({ onUpdate }: EstablishmentAddressProps) => {
+const EstablishmentAddress = ({
+  onUpdate,
+  restaurantId,
+  defaultValues,
+}: EstablishmentAddressProps) => {
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<AddressFormValues>({
     resolver: zodResolver(establishmentAddressSchema),
-    defaultValues: {
-      street: "",
-      number: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      complement: "",
-    },
+    mode: "onChange",
   });
+
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
 
   const handleZipCodeChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -51,6 +58,18 @@ const EstablishmentAddress = ({ onUpdate }: EstablishmentAddressProps) => {
   };
 
   const onSubmit = async (data: AddressFormValues) => {
+    if (!restaurantId) {
+      toast.error("Restaurante não encontrado.");
+      return;
+    }
+
+    const response = await saveEstablishmentData(restaurantId, "address", data);
+
+    if (response?.error) {
+      toast.error(response.error);
+      return;
+    }
+
     onUpdate(data);
     toast.success("Endereço atualizado com sucesso!");
   };
@@ -67,8 +86,11 @@ const EstablishmentAddress = ({ onUpdate }: EstablishmentAddressProps) => {
             <FieldLabel>CEP</FieldLabel>
             <Input
               {...register("zipCode")}
-              onChange={handleZipCodeChange}
               placeholder="00000-000"
+              onChange={(e) => {
+                register("zipCode").onChange(e);
+                handleZipCodeChange(e);
+              }}
             />
             {errors.zipCode && (
               <p className="text-xs text-red-500">{errors.zipCode.message}</p>
@@ -135,7 +157,7 @@ const EstablishmentAddress = ({ onUpdate }: EstablishmentAddressProps) => {
         <Button
           type="submit"
           className="w-full"
-          disabled={Object.keys(errors).length > 0}
+          disabled={!isValid || isSubmitting}
         >
           Salvar Endereço
         </Button>

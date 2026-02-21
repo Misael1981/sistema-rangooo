@@ -77,8 +77,6 @@ const GeneralInformation = ({
     form.setValue("slug", generatedSlug, { shouldValidate: true });
   }, [name, form]);
 
-  console.log("Id no GeneralInformation: ", restaurantId);
-
   const onSubmit = async (data: z.infer<typeof generalInfoSchema>) => {
     if (!restaurantId) {
       toast.error("Restaurante não encontrado.");

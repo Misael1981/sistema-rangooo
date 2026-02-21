@@ -161,6 +161,7 @@ model Restaurant {
   printerType        String?
   printingToken      String?                       @unique
   deliveryFee        Decimal?                      @db.Decimal(6, 2)
+
   onboardingCompleted Boolean @default(false)
   category           RestaurantCategory            @default(RESTAURANT)
   businessHours      BusinessHours[]

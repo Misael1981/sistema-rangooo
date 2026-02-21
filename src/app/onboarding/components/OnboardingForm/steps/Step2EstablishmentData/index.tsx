@@ -128,6 +128,8 @@ const Step2EstablishmentData = ({
 
         <EstablishmentAddress
           onUpdate={(data) => handleUpdate("address", data)}
+          restaurantId={initialRestaurantData?.id ?? ""}
+          defaultValues={formData.address}
         />
 
         <EstablishmentContacts
