@@ -1,3 +1,4 @@
+import { saveEstablishmentData } from "@/app/_actions/save-establishment-data";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FieldLabel } from "@/components/ui/field";
@@ -13,23 +14,32 @@ import { formatPhoneNumber } from "@/helpers/format-phone-number";
 import { establishmentContactInfoSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 type ContactsFormValues = z.infer<typeof establishmentContactInfoSchema>;
 
 type EstablishmentContactsProps = {
   onUpdate: (data: ContactsFormValues) => void;
+  defaultValues?: ContactsFormValues;
+  restaurantId?: string;
 };
 
-const EstablishmentContacts = ({ onUpdate }: EstablishmentContactsProps) => {
+const EstablishmentContacts = ({
+  onUpdate,
+  defaultValues,
+  restaurantId,
+}: EstablishmentContactsProps) => {
   const {
     register,
     control,
     handleSubmit,
     setValue,
+    reset,
     watch,
-    formState: { errors },
+    formState: { isValid, isSubmitting, errors },
   } = useForm<ContactsFormValues>({
     resolver: zodResolver(establishmentContactInfoSchema),
     defaultValues: {
@@ -59,8 +69,31 @@ const EstablishmentContacts = ({ onUpdate }: EstablishmentContactsProps) => {
 
   const contacts = watch("contacts");
 
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
+
   const onSubmit = async (data: ContactsFormValues) => {
-    console.log("onSubmit: ", data);
+    if (!restaurantId) {
+      toast.error("Restaurante não encontrado.");
+      return;
+    }
+
+    const response = await saveEstablishmentData(
+      restaurantId,
+      "contacts",
+      data,
+    );
+
+    if (response?.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    onUpdate(data);
+    toast.success("Redes atualizadas com sucesso!");
   };
 
   return (
@@ -227,7 +260,11 @@ const EstablishmentContacts = ({ onUpdate }: EstablishmentContactsProps) => {
           )}
         </div>
 
-        <Button type="submit" className="w-full ">
+        <Button
+          type="submit"
+          className="w-full "
+          disabled={!isValid || isSubmitting}
+        >
           Salvar
         </Button>
       </form>

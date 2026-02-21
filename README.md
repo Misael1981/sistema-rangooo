@@ -7,3 +7,5 @@ Nosso ambiente combina estilo urbano com conforto, criando o espaço perfeito pa
 Mais do que hambúrgueres, entregamos momentos com combinações criativas, molhos exclusivos da casa e aquela crocância irresistível nas batatas.
 
 Congo’s Burger: intensidade no sabor, qualidade em cada detalhe.
+
+https://www.instagram.com/sistemarangooo?utm_source=qr&igsh=MXU2MGFpdGE0b2Rq
