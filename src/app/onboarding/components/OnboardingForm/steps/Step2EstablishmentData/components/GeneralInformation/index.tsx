@@ -1,5 +1,6 @@
 "use client";
 
+import { saveEstablishmentData } from "@/app/_actions/save-establishment-data";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -31,11 +32,13 @@ const RestaurantCategoryList = [
 type GeneralInformationProps = {
   defaultValues?: z.infer<typeof generalInfoSchema>;
   onUpdate: (data: z.infer<typeof generalInfoSchema>) => void;
+  restaurantId: string;
 };
 
 const GeneralInformation = ({
   onUpdate,
   defaultValues,
+  restaurantId,
 }: GeneralInformationProps) => {
   const form = useForm<z.infer<typeof generalInfoSchema>>({
     resolver: zodResolver(generalInfoSchema),
@@ -74,7 +77,21 @@ const GeneralInformation = ({
     form.setValue("slug", generatedSlug, { shouldValidate: true });
   }, [name, form]);
 
-  const onSubmit = (data: z.infer<typeof generalInfoSchema>) => {
+  console.log("Id no GeneralInformation: ", restaurantId);
+
+  const onSubmit = async (data: z.infer<typeof generalInfoSchema>) => {
+    if (!restaurantId) {
+      toast.error("Restaurante não encontrado.");
+      return;
+    }
+
+    const response = await saveEstablishmentData(restaurantId, "general", data);
+
+    if (response?.error) {
+      toast.error(response.error);
+      return;
+    }
+
     onUpdate(data);
     toast.success("Dados atualizados com sucesso!");
   };
@@ -122,7 +139,7 @@ const GeneralInformation = ({
           </Field>
 
           <Field className="md:col-span-2">
-            <FieldLabel>Slug (Link da vitrine)</FieldLabel>
+            <FieldLabel>Slug (Link da página)</FieldLabel>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
                 rangooo.com/

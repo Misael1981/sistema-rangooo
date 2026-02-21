@@ -130,16 +130,24 @@ const Step1OwnerData = ({
               )}
             </Field>
           </FieldGroup>
+          <div className="w-full my-6">
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              className="w-full"
+            >
+              {form.formState.isSubmitting ? "Salvando..." : "Editar dados"}
+            </Button>
+          </div>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-end">
         <Button
-          type="submit"
-          form="owner-form"
           disabled={form.formState.isSubmitting}
+          type="button"
+          onClick={nextStep}
         >
-          {form.formState.isSubmitting ? "Salvando..." : "Próximo"}
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight className="ml-2 h-4 w-4" /> Próximo
         </Button>
       </CardFooter>
     </Card>

@@ -1,48 +1,95 @@
 "use server";
 
-import { db } from "@/lib/prisma";
+import db from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import {
+  generalInfoSchema,
+  establishmentAddressSchema,
+  establishmentContactInfoSchema,
+  gallerySchema,
+} from "@/schemas/onboarding-schema";
+
+type Step = "general" | "address" | "contacts" | "gallery";
 
 export async function saveEstablishmentData(
   restaurantId: string,
-  data: any, // Aqui virão todos os seus dados do Step 2
+  step: Step,
+  data: unknown,
 ) {
   try {
-    // Usamos uma transação para garantir a integridade dos dados
-    await db.$transaction([
-      // 1. Update das informações básicas
-      db.restaurant.update({
-        where: { id: restaurantId },
-        data: {
-          name: data.name,
-          slug: data.slug,
-          category: data.category,
-          description: data.description,
-          // Endereço (se for um campo JSON ou colunas separadas)
-          address: {
-            upsert: {
-              create: data.address,
-              update: data.address,
-            },
+    if (!restaurantId) {
+      return { error: "Restaurante não encontrado." };
+    }
+
+    switch (step) {
+      case "general": {
+        const parsed = generalInfoSchema.parse(data);
+
+        await db.restaurant.update({
+          where: { id: restaurantId },
+          data: {
+            name: parsed.name,
+            slug: parsed.slug,
+            category: parsed.category,
+            description: parsed.description,
+            onboardingStep: 2,
           },
-        },
-      }),
-      // 2. Limpar contatos antigos para inserir os novos (limpeza estratégica)
-      db.contact.deleteMany({ where: { restaurantId } }),
-      db.contact.createMany({
-        data: data.contacts.map((c: any) => ({ ...c, restaurantId })),
-      }),
-      // 3. Mesma lógica para redes sociais
-      db.socialMedia.deleteMany({ where: { restaurantId } }),
-      db.socialMedia.createMany({
-        data: data.socialMedia.map((s: any) => ({ ...s, restaurantId })),
-      }),
-    ]);
+        });
+
+        break;
+      }
+
+      case "address": {
+        const parsed = establishmentAddressSchema.parse(data);
+
+        await db.restaurant.update({
+          where: { id: restaurantId },
+          data: {
+            ...parsed,
+            onboardingStep: 3,
+          },
+        });
+
+        break;
+      }
+
+      case "contacts": {
+        const parsed = establishmentContactInfoSchema.parse(data);
+
+        await db.restaurant.update({
+          where: { id: restaurantId },
+          data: {
+            email: parsed.email,
+            socialMedia: parsed.socialMedia,
+            onboardingStep: 4,
+          },
+        });
+
+        // aqui você pode tratar contatos em tabela separada se existir
+        break;
+      }
+
+      case "gallery": {
+        const parsed = gallerySchema.parse(data);
+
+        await db.restaurant.update({
+          where: { id: restaurantId },
+          data: {
+            avatarImageUrl: parsed.avatarImageUrl,
+            coverImageUrl: parsed.coverImageUrl,
+            onboardingStep: 5,
+          },
+        });
+
+        break;
+      }
+    }
 
     revalidatePath("/onboarding");
+
     return { success: true };
   } catch (error) {
-    console.error("Erro na persistência progressiva:", error);
-    return { error: "Falha ao salvar dados. Tente novamente." };
+    console.error("Erro ao atualizar step:", error);
+    return { error: "Erro ao salvar dados." };
   }
 }
