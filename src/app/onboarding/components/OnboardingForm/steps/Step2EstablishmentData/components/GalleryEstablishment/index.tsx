@@ -1,18 +1,29 @@
+import { updateRestaurantGallery } from "@/app/_actions/update-restaurant-gallery";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field";
 import { gallerySchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 type GalleryValue = z.infer<typeof gallerySchema>;
 
 type GalleryEstablishmentProps = {
   onUpdate: (data: GalleryValue) => void;
+  defaultValues: GalleryValue;
+  restaurantId: string;
 };
 
-const GalleryEstablishment = ({ onUpdate }: GalleryEstablishmentProps) => {
+const GalleryEstablishment = ({
+  onUpdate,
+  defaultValues,
+  restaurantId,
+}: GalleryEstablishmentProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<GalleryValue>({
     resolver: zodResolver(gallerySchema),
     defaultValues: {
@@ -21,8 +32,60 @@ const GalleryEstablishment = ({ onUpdate }: GalleryEstablishmentProps) => {
     },
   });
 
+  useEffect(() => {
+    if (defaultValues && Object.keys(defaultValues).length > 0) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
+
+  const uploadToCloudinaryClient = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
+    );
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    const data = await response.json();
+    return { url: data.secure_url, publicId: data.public_id };
+  };
+
   const onSubmit = async (data: GalleryValue) => {
-    console.log(data);
+    setIsLoading(true);
+
+    let avatarUrl = data.avatarImageUrl as string;
+    let coverUrl = data.coverImageUrl as string;
+
+    if (data.avatarImageUrl instanceof File) {
+      const res = await uploadToCloudinaryClient(data.avatarImageUrl);
+      avatarUrl = res.url;
+    }
+
+    if (data.coverImageUrl instanceof File) {
+      const res = await uploadToCloudinaryClient(data.coverImageUrl);
+      coverUrl = res.url;
+    }
+
+    await updateRestaurantGallery(restaurantId, {
+      avatarImageUrl: avatarUrl,
+      coverImageUrl: coverUrl,
+    });
+
+    onUpdate({
+      avatarImageUrl: avatarUrl,
+      coverImageUrl: coverUrl,
+    });
+
+    setIsLoading(false);
+    toast.success("Tudo salvo, patrão!");
   };
 
   return (
@@ -53,8 +116,8 @@ const GalleryEstablishment = ({ onUpdate }: GalleryEstablishmentProps) => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">
-          Salvar Identidade Visual
+        <Button className="w-full">
+          {isLoading ? "Salvando..." : "Salvar Identidade Visual"}
         </Button>
       </form>
     </>

@@ -140,6 +140,8 @@ const Step2EstablishmentData = ({
 
         <GalleryEstablishment
           onUpdate={(data) => handleUpdate("gallery", data)}
+          defaultValues={formData.gallery}
+          restaurantId={initialRestaurantData?.id ?? ""}
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
