@@ -3,7 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
 
-const MenuCategoriesList = () => {
+type CategorySummary = {
+  id: string;
+  name: string;
+  productsCount: number;
+};
+
+type MenuCategoriesListProps = {
+  categories: CategorySummary[];
+  onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
+  selectedCategoryId: string;
+  restaurantId: string;
+};
+
+const MenuCategoriesList = ({
+  categories,
+  onSelect,
+  onDelete,
+  selectedCategoryId,
+  restaurantId,
+}: MenuCategoriesListProps) => {
   return (
     <>
       <SubHeaderSteps

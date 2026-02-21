@@ -1,6 +1,7 @@
 import db from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import OnboardingForm from "./components/OnboardingForm";
+import { getRestaurantMenuById } from "@/data/get-menu-category-by-id";
 
 export default async function OnboardingPage({
   searchParams,
@@ -31,6 +32,10 @@ export default async function OnboardingPage({
         where: { id: invite.restaurantId },
       })
     : null;
+
+  //restaurantId: restaurant?.id
+
+  const categories = await getRestaurantMenuById(restaurant!.id);
 
   const isExpired = new Date() > invite.expiresAt;
   if (isExpired) {
@@ -70,6 +75,7 @@ export default async function OnboardingPage({
             onboardingStep: restaurant?.onboardingStep ?? 1,
           }}
           initialRestaurantData={restaurant}
+          categories={categories}
         />
       </div>
     </main>

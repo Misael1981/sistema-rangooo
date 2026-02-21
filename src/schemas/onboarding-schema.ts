@@ -53,3 +53,7 @@ export const gallerySchema = z.object({
     .union([z.string(), z.any()])
     .refine((val) => val, "Imagem de capa obrigatória"),
 });
+
+export const tableMenuSchema = z.object({
+  name: z.string().min(1, "Nome obrigatório"),
+});
