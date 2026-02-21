@@ -13,6 +13,7 @@ import { useEffect, useReducer } from "react";
 import MenuCategoriesList from "./components/MenuCategoriesList";
 import { MenuCategoryData, Products } from "@/dtos/onboarding.dto";
 import { Restaurant } from "@prisma/client";
+import SelectedTableName from "./components/SelectedTableName";
 
 export type MenuAction =
   | { type: "SET_CATEGORIES"; payload: MenuCategoryData[] }
@@ -111,7 +112,7 @@ const Step3MenuEstablishmentData = ({
           itens que ficarão disponíveis para seus clientes realizarem pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-h-100">
+      <CardContent className="min-h-100 space-y-8">
         <MenuCategoriesList
           categories={categoriesSummary}
           onSelect={handleSelectCategory}
@@ -119,6 +120,11 @@ const Step3MenuEstablishmentData = ({
           selectedCategoryId={state.selectedCategoryId ?? ""}
           restaurantId={restaurantId ?? ""}
           token={token}
+        />
+
+        <SelectedTableName
+          selectedCategoryId={state.selectedCategoryId ?? ""}
+          categories={categoriesSummary}
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
