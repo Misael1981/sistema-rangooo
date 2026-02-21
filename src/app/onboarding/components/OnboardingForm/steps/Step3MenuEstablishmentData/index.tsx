@@ -9,10 +9,16 @@ import {
 } from "@/components/ui/card";
 import { menuReducer } from "@/reducers/menuReducer";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import MenuCategoriesList from "./components/MenuCategoriesList";
 import { MenuCategoryData, Products } from "@/dtos/onboarding.dto";
 import { Restaurant } from "@prisma/client";
+
+export type MenuAction =
+  | { type: "SET_CATEGORIES"; payload: MenuCategoryData[] }
+  | { type: "SELECT_CATEGORY"; payload: string }
+  | { type: "REMOVE_CATEGORY"; payload: string }
+  | { type: "ADD_PRODUCT"; payload: { categoryId: string; product: Products } };
 
 type Step3MenuEstablishmentDataProps = {
   restaurantId?: string | null;
@@ -27,19 +33,16 @@ type Step3MenuEstablishmentDataProps = {
   onBack: () => void;
   initialRestaurantData: Restaurant | null;
   menuCategories: MenuCategoryData[] | null;
+  token: string;
 };
-
-// No seu arquivo ou onde você define o reducer
-export type MenuAction =
-  | { type: "SET_CATEGORIES"; payload: MenuCategoryData[] }
-  | { type: "SELECT_CATEGORY"; payload: string }
-  | { type: "ADD_PRODUCT"; payload: { categoryId: string; product: Products } };
 
 const Step3MenuEstablishmentData = ({
   restaurantId,
   onSuccess,
   onBack,
+  initialRestaurantData,
   menuCategories,
+  token,
 }: Step3MenuEstablishmentDataProps) => {
   const [state, dispatch] = useReducer(menuReducer, {
     categories: menuCategories ?? [],
@@ -47,7 +50,13 @@ const Step3MenuEstablishmentData = ({
       menuCategories && menuCategories.length > 0 ? menuCategories[0].id : null,
   });
 
-  if (!menuCategories || menuCategories.length === 0) {
+  useEffect(() => {
+    if (menuCategories) {
+      dispatch({ type: "SET_CATEGORIES", payload: menuCategories });
+    }
+  }, [menuCategories]);
+
+  if (!menuCategories) {
     return <div>O cardápio ainda está sendo montado ou não existe.</div>;
   }
 
@@ -102,13 +111,14 @@ const Step3MenuEstablishmentData = ({
           itens que ficarão disponíveis para seus clientes realizarem pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-100">
         <MenuCategoriesList
           categories={categoriesSummary}
           onSelect={handleSelectCategory}
           onDelete={handleDeleteCategory}
           selectedCategoryId={state.selectedCategoryId ?? ""}
-          restaurantId={restaurantId!}
+          restaurantId={restaurantId ?? ""}
+          token={token}
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">

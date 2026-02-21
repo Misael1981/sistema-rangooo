@@ -33,9 +33,9 @@ export default async function OnboardingPage({
       })
     : null;
 
-  //restaurantId: restaurant?.id
-
-  const categories = await getRestaurantMenuById(restaurant!.id);
+  const categories = restaurant?.id
+    ? await getRestaurantMenuById(restaurant.id)
+    : [];
 
   const isExpired = new Date() > invite.expiresAt;
   if (isExpired) {
@@ -75,7 +75,7 @@ export default async function OnboardingPage({
             onboardingStep: restaurant?.onboardingStep ?? 1,
           }}
           initialRestaurantData={restaurant}
-          categories={categories}
+          menuCategories={categories}
         />
       </div>
     </main>

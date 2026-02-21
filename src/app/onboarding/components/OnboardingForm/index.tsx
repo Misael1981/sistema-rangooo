@@ -21,7 +21,7 @@ type OnboardingFormProps = {
   };
   restaurantId?: string;
   initialRestaurantData: Restaurant | null;
-  categories: MenuCategoryData[] | null;
+  menuCategories: MenuCategoryData[];
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -31,7 +31,7 @@ export default function OnboardingForm({
   initialData,
   restaurantId,
   initialRestaurantData,
-  categories,
+  menuCategories,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -53,6 +53,9 @@ export default function OnboardingForm({
 
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
+
+  console.log("Current Step:", currentStep);
+  console.log("Active Restaurant ID:", activeRestaurantId);
 
   return (
     <div className="space-y-8 bg-white p-8 rounded-xl shadow-sm border">
@@ -86,12 +89,13 @@ export default function OnboardingForm({
 
       {currentStep === 3 && (
         <Step3MenuEstablishmentData
-          restaurantId={activeRestaurantId}
+          restaurantId={initialRestaurantData?.id}
           data={formData}
           onSuccess={nextStep}
           onBack={prevStep}
           initialRestaurantData={initialRestaurantData}
-          menuCategories={categories}
+          menuCategories={menuCategories}
+          token={token}
         />
       )}
 

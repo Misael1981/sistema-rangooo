@@ -46,7 +46,7 @@ export async function saveEstablishmentData(
           where: { id: restaurantId },
           data: {
             ...parsed,
-            onboardingStep: 3,
+            onboardingStep: 2,
           },
         });
 
@@ -61,7 +61,7 @@ export async function saveEstablishmentData(
           data: {
             email: parsed.email,
             socialMedia: parsed.socialMedia,
-            onboardingStep: 4,
+            onboardingStep: 2,
           },
         });
 
@@ -77,7 +77,7 @@ export async function saveEstablishmentData(
           data: {
             avatarImageUrl: parsed.avatarImageUrl,
             coverImageUrl: parsed.coverImageUrl,
-            onboardingStep: 5,
+            onboardingStep: 3,
           },
         });
 
