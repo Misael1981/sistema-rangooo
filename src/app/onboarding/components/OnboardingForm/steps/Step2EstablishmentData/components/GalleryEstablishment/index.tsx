@@ -1,4 +1,4 @@
-import { updateRestaurantGallery } from "@/app/_actions/update-restaurant-gallery";
+import { saveEstablishmentData } from "@/app/_actions/save-establishment-data";
 import ImageUpload from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field";
@@ -26,11 +26,11 @@ const GalleryEstablishment = ({
 
   const form = useForm<GalleryValue>({
     resolver: zodResolver(gallerySchema),
-    defaultValues: {
-      avatarImageUrl: "",
-      coverImageUrl: "",
-    },
+    defaultValues,
   });
+
+  const avatarValue = form.watch("avatarImageUrl");
+  const coverValue = form.watch("coverImageUrl");
 
   useEffect(() => {
     if (defaultValues && Object.keys(defaultValues).length > 0) {
@@ -65,16 +65,30 @@ const GalleryEstablishment = ({
     let coverUrl = data.coverImageUrl as string;
 
     if (data.avatarImageUrl instanceof File) {
-      const res = await uploadToCloudinaryClient(data.avatarImageUrl);
-      avatarUrl = res.url;
+      try {
+        const uploadResult = await uploadToCloudinaryClient(
+          data.avatarImageUrl,
+        );
+        avatarUrl = uploadResult.url;
+      } catch (err) {
+        toast.error("Falha ao subir a imagem para a nuvem.");
+        console.error("Erro ao subir a imagem:", err);
+        return;
+      }
     }
 
     if (data.coverImageUrl instanceof File) {
-      const res = await uploadToCloudinaryClient(data.coverImageUrl);
-      coverUrl = res.url;
+      try {
+        const uploadResult = await uploadToCloudinaryClient(data.coverImageUrl);
+        coverUrl = uploadResult.url;
+      } catch (err) {
+        toast.error("Falha ao subir a imagem para a nuvem.");
+        console.error("Erro ao subir a imagem:", err);
+        return;
+      }
     }
 
-    await updateRestaurantGallery(restaurantId, {
+    await saveEstablishmentData(restaurantId, "gallery", {
       avatarImageUrl: avatarUrl,
       coverImageUrl: coverUrl,
     });
@@ -101,7 +115,7 @@ const GalleryEstablishment = ({
             <ImageUpload
               form={form}
               name="avatarImageUrl"
-              initialUrl={form.getValues("avatarImageUrl")}
+              initialUrl={avatarValue}
             />
           </div>
 
@@ -111,7 +125,7 @@ const GalleryEstablishment = ({
             <ImageUpload
               form={form}
               name="coverImageUrl"
-              initialUrl={form.getValues("coverImageUrl")}
+              initialUrl={coverValue}
             />
           </div>
         </div>

@@ -65,7 +65,6 @@ export async function saveEstablishmentData(
           },
         });
 
-        // aqui você pode tratar contatos em tabela separada se existir
         break;
       }
 
