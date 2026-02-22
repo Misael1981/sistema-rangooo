@@ -21,8 +21,8 @@ import {
 } from "@/helpers/format-currency-brl";
 import { productSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -45,40 +45,77 @@ const DialogAddProduct = ({
   selectedCategoryId,
   restaurantId,
 }: DialogAddProductProps) => {
-  const form = useForm({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: "",
-      price: product?.price
-        ? formatCurrencyBRL(String(product.price * 100))
-        : "",
-      ingredients: product?.ingredients ? product.ingredients.join(", ") : "",
-      description: product?.description || null,
-      imageUrl: null,
-    },
   });
 
-  const price = useWatch({
-    control: form.control,
-    name: "price",
-  });
+  const { register, handleSubmit, control, reset } = form;
 
   useEffect(() => {
     if (product) {
-      form.reset({
+      reset({
+        name: product.name,
+        price: formatCurrencyBRL(String(product.price * 100)),
         ingredients: product.ingredients.join(", "),
+        description: product.description ?? "",
+        imageUrl: product.imageUrl ?? null,
+      });
+    } else {
+      reset({
+        name: "",
+        price: "",
+        ingredients: "",
+        description: "",
+        imageUrl: null,
       });
     }
-  }, [product, form]);
+  }, [product, reset]);
+
+  const uploadToCloudinaryClient = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
+    );
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    const data = await response.json();
+    return { url: data.secure_url, publicId: data.public_id };
+  };
 
   const onSubmit = async (data: z.infer<typeof productSchema>) => {
+    let imageUrl = data.imageUrl;
+    setIsSubmitting(true);
+
+    if (data.imageUrl instanceof File) {
+      try {
+        const uploadResult = await uploadToCloudinaryClient(data.imageUrl);
+        imageUrl = uploadResult.url;
+      } catch (err) {
+        toast.error("Falha ao subir a imagem para a nuvem.");
+        console.error("Erro ao subir a imagem:", err);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       const payload = {
         id: product?.id,
         name: data.name,
         price: parseCurrencyBRL(data.price),
         description: data.description,
-        imageUrl: data.imageUrl,
+        imageUrl,
         ingredients: data.ingredients
           ? data.ingredients
               .split(",")
@@ -100,13 +137,15 @@ const DialogAddProduct = ({
     } catch (error) {
       toast.error("ops, algo deu errado.!");
       console.error("Erro ao submeter o formulário:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <Dialog open={dialogAddProductOpen} onOpenChange={setDialogAddProductOpen}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <DialogContent className="sm:max-w-2xl w-full">
+      <DialogContent className="sm:max-w-2xl w-full">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>
               Produto da
@@ -121,37 +160,54 @@ const DialogAddProduct = ({
           </DialogHeader>
           <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4 pb-16">
             <FieldGroup>
-              <div className="space-y-2">
+              <Field>
                 <FieldLabel>Imagem do Produto</FieldLabel>
                 <ImageUpload
-                  name="imageUrl"
                   form={form}
+                  name="imageUrl"
                   initialUrl={product?.imageUrl}
                 />
-              </div>
-              <div className="flex gap-2">
+              </Field>
+              <div className="flex gap-2 items-center">
                 <Field className="w-2/3">
                   <Label htmlFor="name-1">Nome</Label>
-                  <Input id="name-1" name="name" defaultValue={product?.name} />
-                </Field>
-                <Field className="w-1/3">
-                  <Label htmlFor="price">Preço</Label>
                   <Input
-                    id="price"
+                    id="name-1"
                     type="text"
-                    inputMode="numeric"
-                    value={price ?? ""}
-                    onChange={(e) =>
-                      form.setValue("price", formatCurrencyBRL(e.target.value))
-                    }
+                    {...register("name")}
+                    defaultValue={product?.name}
                   />
                 </Field>
+                <div className="w-1/3">
+                  <Label htmlFor="price-1" className="mb-3">
+                    Preço
+                  </Label>
+                  <Controller
+                    control={control}
+                    name="price"
+                    render={({ field: { onChange, value, ref } }) => (
+                      <Input
+                        ref={ref}
+                        id="price"
+                        type="text"
+                        inputMode="numeric"
+                        value={value}
+                        onChange={(e) => {
+                          const formattedValue = formatCurrencyBRL(
+                            e.target.value,
+                          );
+                          onChange(formattedValue);
+                        }}
+                      />
+                    )}
+                  />
+                </div>
               </div>
               <Field>
                 <Label htmlFor="ingredients-1">Ingredientes</Label>
                 <Input
                   id="ingredients-1"
-                  name="ingredients"
+                  {...register("ingredients")}
                   defaultValue={product?.ingredients}
                 />
               </Field>
@@ -159,7 +215,7 @@ const DialogAddProduct = ({
                 <Label htmlFor="description-1">Descrição</Label>
                 <Textarea
                   id="description-1"
-                  name="description"
+                  {...register("description")}
                   defaultValue={product?.description || ""}
                 />
               </Field>
@@ -167,12 +223,17 @@ const DialogAddProduct = ({
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button type="button" variant="outline">
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Salvar</Button>
+
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Salvando..." : "Salvar"}
+            </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 };
