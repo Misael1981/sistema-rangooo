@@ -142,7 +142,7 @@ const AdditionalProductsCard = ({
             )}
           </div>
         </div>
-        <div className="flex flex-col items-center border-t gap-4 pt-4">
+        <div className="flex flex-col items-center border-b gap-4 py-4">
           <Button
             variant="ghost"
             size="sm"

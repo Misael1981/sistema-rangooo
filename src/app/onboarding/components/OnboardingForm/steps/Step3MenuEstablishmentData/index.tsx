@@ -15,6 +15,7 @@ import { MenuCategoryData, Products } from "@/dtos/onboarding.dto";
 import { Restaurant } from "@prisma/client";
 import SelectedTableName from "./components/SelectedTableName";
 import AdditionalProductsCard from "./components/AdditionalProductsCard";
+import ProductsListSession from "./components/ProductsListSession";
 
 export type MenuAction =
   | { type: "SET_CATEGORIES"; payload: MenuCategoryData[] }
@@ -130,6 +131,12 @@ const Step3MenuEstablishmentData = ({
         <AdditionalProductsCard
           selectedCategory={selectedCategory}
           token={token}
+        />
+
+        <ProductsListSession
+          selectedProductsCategory={selectedProductsCategory}
+          token={token}
+          restaurantId={restaurantId ?? ""}
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">

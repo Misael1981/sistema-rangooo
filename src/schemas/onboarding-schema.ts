@@ -57,3 +57,16 @@ export const gallerySchema = z.object({
 export const tableMenuSchema = z.object({
   name: z.string().min(1, "Nome obrigatório"),
 });
+
+export const productSchema = z.object({
+  imageUrl: z.any().refine((val) => val, "Imagem é obrigatória"),
+  name: z.string().min(1, "Nome é obrigatório"),
+
+  price: z.string().min(1, "Preço é obrigatório"),
+  ingredients: z
+    .string()
+    .min(3, "Descreva ao menos um ingrediente")
+    .optional()
+    .or(z.literal("")),
+  description: z.string().nullable().optional(),
+});

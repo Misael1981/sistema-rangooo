@@ -41,3 +41,25 @@ export interface MenuCategoryData {
   products: Products[];
   additionalIngredients: AdditionalIngredient[];
 }
+
+export interface MenuCategoryWithProductsDTO {
+  id: string;
+  name: string;
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    description: string | null;
+    imageUrl: string | null;
+    ingredients: string[];
+  }[];
+}
+
+export interface MenuProductWithCategoryDTO {
+  id: string;
+  name: string;
+  price: number;
+  description: string | null;
+  imageUrl: string | null;
+  ingredients: string[];
+}
