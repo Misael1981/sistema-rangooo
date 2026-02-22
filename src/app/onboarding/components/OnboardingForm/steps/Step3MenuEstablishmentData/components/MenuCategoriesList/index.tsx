@@ -48,7 +48,7 @@ const MenuCategoriesList = ({
 
       if (result.success) {
         toast.success("Tabela criada com sucesso!");
-        if (inputRef.current) inputRef.current.value = ""; // Limpa o campo
+        if (inputRef.current) inputRef.current.value = "";
       } else {
         toast.error(result.error || "Erro ao criar categoria.");
       }
