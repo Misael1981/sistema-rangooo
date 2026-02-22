@@ -55,13 +55,18 @@ const ProductsListSession = ({
 
   const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja excluir este produto?")) {
-      const result = await deleteProduct(id, token, restaurantId);
+      const result = await deleteProduct(id, token);
       if (result.success) {
         toast.success("Produto removido com sucesso!");
       } else {
         toast.error(result.error);
       }
     }
+  };
+
+  const handleAddProduct = () => {
+    setSelectedProduct(null);
+    setDialogAddProductOpen(true);
   };
 
   return (
@@ -74,7 +79,7 @@ const ProductsListSession = ({
       />
       <section className="space-y-6">
         <div className="flex justify-end w-full">
-          <Button onClick={() => setDialogAddProductOpen(true)}>
+          <Button onClick={handleAddProduct}>
             <CirclePlus size={16} />
             Adicionar Produto
           </Button>

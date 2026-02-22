@@ -54,6 +54,8 @@ const DialogAddProduct = ({
   const { register, handleSubmit, control, reset } = form;
 
   useEffect(() => {
+    if (!dialogAddProductOpen) return;
+
     if (product) {
       reset({
         name: product.name,
@@ -71,7 +73,7 @@ const DialogAddProduct = ({
         imageUrl: null,
       });
     }
-  }, [product, reset]);
+  }, [product, dialogAddProductOpen, reset]);
 
   const uploadToCloudinaryClient = async (file: File) => {
     const formData = new FormData();
@@ -126,6 +128,7 @@ const DialogAddProduct = ({
       };
 
       const result = await upsertProduct(payload, token, restaurantId);
+      console.log("PAYLOAD ID:", payload.id);
 
       if (result.success) {
         toast.success(product ? "Produto atualizado!" : "Produto criado!");

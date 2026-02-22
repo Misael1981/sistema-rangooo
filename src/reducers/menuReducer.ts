@@ -16,12 +16,22 @@ type MenuAction =
 
 export function menuReducer(state: MenuState, action: MenuAction): MenuState {
   switch (action.type) {
-    case "SET_CATEGORIES":
+    case "SET_CATEGORIES": {
+      const categories = action.payload;
+
+      const categoryStillExists = categories.find(
+        (cat) => cat.id === state.selectedCategoryId,
+      );
+
       return {
-        ...state,
-        categories: action.payload,
-        selectedCategoryId: action.payload[0]?.id ?? null,
+        categories,
+        selectedCategoryId: categoryStillExists
+          ? state.selectedCategoryId
+          : categories.length > 0
+            ? categories[0].id
+            : null,
       };
+    }
 
     case "SELECT_CATEGORY":
       return {
