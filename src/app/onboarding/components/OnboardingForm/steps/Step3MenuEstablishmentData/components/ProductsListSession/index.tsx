@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import DialogAddProduct from "../DialogAddProduct";
+import { toast } from "sonner";
+import { deleteProduct } from "@/app/_actions/upsert-product";
 
 type ProductsListSessionProps = {
   selectedProductsCategory: MenuCategoryWithProductsDTO | null;
@@ -52,16 +54,16 @@ const ProductsListSession = ({
   };
 
   const handleDelete = async (id: string) => {
-    console.log(id, token);
-    // if (confirm("Tem certeza que deseja excluir este produto?")) {
-    //   const result = await deleteProduct(id, slug);
-    //   if (result.success) {
-    //     toast.success("Produto removido com sucesso!");
-    //   } else {
-    //     toast.error(result.error);
-    //   }
-    // }
+    if (confirm("Tem certeza que deseja excluir este produto?")) {
+      const result = await deleteProduct(id, token, restaurantId);
+      if (result.success) {
+        toast.success("Produto removido com sucesso!");
+      } else {
+        toast.error(result.error);
+      }
+    }
   };
+
   return (
     <>
       <SubHeaderSteps
@@ -108,7 +110,7 @@ const ProductsListSession = ({
             : `Ver Lista (${selectedProductsCategory.products.length})`}
         </Button>
       </section>
-      <section>
+      <section className="w-full flex items-center justify-center">
         {showList && (
           <ul className="w-full max-w-md space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
             {filteredProducts.map((p) => (
