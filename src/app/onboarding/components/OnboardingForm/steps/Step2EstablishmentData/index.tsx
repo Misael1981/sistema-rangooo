@@ -22,7 +22,7 @@ import {
   generalInfoSchema,
 } from "@/schemas/onboarding-schema";
 import z from "zod";
-import { Restaurant } from "@prisma/client";
+import { ContactNumber, Restaurant } from "@prisma/client";
 
 type Step2Payload = {
   restaurantId: string;
@@ -41,6 +41,7 @@ type Step2EstablishmentDataProps = {
     phone: string;
     onboardingStep?: number;
   };
+  contacts: ContactNumber[] | null;
   onSuccess: () => void;
   onBack: () => void;
   initialRestaurantData: Restaurant | null;
@@ -69,6 +70,7 @@ const Step2EstablishmentData = ({
   onSuccess,
   onBack,
   initialRestaurantData,
+  contacts,
 }: Step2EstablishmentDataProps) => {
   const [formData, setFormData] = useState<Step2Payload>({
     restaurantId: initialRestaurantData?.id ?? "",
@@ -87,7 +89,7 @@ const Step2EstablishmentData = ({
       zipCode: initialRestaurantData?.zipCode ?? "",
     },
     contacts: {
-      contacts: [],
+      contacts: contacts ?? [],
       email: initialRestaurantData?.email ?? "",
       socialMedia: parseSocialMedia(initialRestaurantData?.socialMedia),
     },

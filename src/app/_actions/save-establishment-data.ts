@@ -61,6 +61,14 @@ export async function saveEstablishmentData(
           data: {
             email: parsed.email,
             socialMedia: parsed.socialMedia,
+            contacts: {
+              deleteMany: {},
+              create: parsed.contacts.map((contact) => ({
+                type: contact.type,
+                number: contact.number,
+                isPrimary: contact.isPrimary,
+              })),
+            },
             onboardingStep: 2,
           },
         });

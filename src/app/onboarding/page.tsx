@@ -30,6 +30,9 @@ export default async function OnboardingPage({
   const restaurant = invite.restaurantId
     ? await db.restaurant.findUnique({
         where: { id: invite.restaurantId },
+        include: {
+          contacts: true,
+        },
       })
     : null;
 
@@ -76,6 +79,7 @@ export default async function OnboardingPage({
           }}
           initialRestaurantData={restaurant}
           menuCategories={categories}
+          contacts={restaurant?.contacts ?? null}
         />
       </div>
     </main>

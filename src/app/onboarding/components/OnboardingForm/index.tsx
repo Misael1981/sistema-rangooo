@@ -7,7 +7,7 @@ import Step3MenuEstablishmentData from "./steps/Step3MenuEstablishmentData";
 import Step4Confirmation from "./steps/Step4Confirmation";
 import { ownerSchema } from "@/schemas/onboarding-schema";
 import z from "zod";
-import { Restaurant } from "@prisma/client";
+import { ContactNumber, Restaurant } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
 
 type OnboardingFormProps = {
@@ -22,6 +22,7 @@ type OnboardingFormProps = {
   restaurantId?: string;
   initialRestaurantData: Restaurant | null;
   menuCategories: MenuCategoryData[];
+  contacts: ContactNumber[] | null;
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -32,6 +33,7 @@ export default function OnboardingForm({
   restaurantId,
   initialRestaurantData,
   menuCategories,
+  contacts,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -53,9 +55,6 @@ export default function OnboardingForm({
 
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
-
-  console.log("Current Step:", currentStep);
-  console.log("Active Restaurant ID:", activeRestaurantId);
 
   return (
     <div className="space-y-8 bg-white p-8 rounded-xl shadow-sm border">
@@ -84,6 +83,7 @@ export default function OnboardingForm({
           onSuccess={nextStep}
           onBack={prevStep}
           initialRestaurantData={initialRestaurantData}
+          contacts={contacts}
         />
       )}
 
