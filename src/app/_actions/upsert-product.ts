@@ -66,16 +66,13 @@ export const upsertProduct = async (
 
 export const deleteProduct = async (
   id: string,
-  slug: string,
+  restaurantId: string,
   token: string,
 ) => {
   try {
     await db.product.delete({
       where: {
-        id: id,
-        restaurant: {
-          slug: slug,
-        },
+        id,
       },
     });
 
