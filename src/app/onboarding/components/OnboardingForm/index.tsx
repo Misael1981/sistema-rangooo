@@ -9,6 +9,7 @@ import { ownerSchema } from "@/schemas/onboarding-schema";
 import z from "zod";
 import { ContactNumber, Restaurant } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
+import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 
 type OnboardingFormProps = {
   token: string;
@@ -23,6 +24,7 @@ type OnboardingFormProps = {
   initialRestaurantData: Restaurant | null;
   menuCategories: MenuCategoryData[];
   contacts: ContactNumber[] | null;
+  restaurantFullData: RestaurantFullDTO | null;
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -34,6 +36,7 @@ export default function OnboardingForm({
   initialRestaurantData,
   menuCategories,
   contacts,
+  restaurantFullData,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -105,6 +108,7 @@ export default function OnboardingForm({
           data={initialData}
           onSuccess={nextStep}
           onBack={prevStep}
+          restaurantFullData={restaurantFullData}
         />
       )}
     </div>

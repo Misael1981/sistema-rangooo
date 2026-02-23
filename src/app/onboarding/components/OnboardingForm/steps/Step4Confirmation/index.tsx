@@ -7,7 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 import { ArrowLeft } from "lucide-react";
+import CardCategories from "./components/CardCategories";
 
 type Step4ConfirmationProps = {
   restaurantId?: string | null;
@@ -20,14 +22,15 @@ type Step4ConfirmationProps = {
   };
   onSuccess: () => void;
   onBack: () => void;
+  restaurantFullData: RestaurantFullDTO | null;
 };
 
 const Step4Confirmation = ({
-  restaurantId,
-  data,
   onSuccess,
   onBack,
+  restaurantFullData,
 }: Step4ConfirmationProps) => {
+  console.log(restaurantFullData);
   return (
     <Card>
       <CardHeader>
@@ -37,7 +40,13 @@ const Step4Confirmation = ({
           seu estabelecimento estará pronto para receber pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <section className="flex justify-center flex-wrap gap-4">
+          {restaurantFullData?.menuCategories.map((cat) => (
+            <CardCategories key={cat.id} data={cat} />
+          ))}
+        </section>
+      </CardContent>
       <CardFooter className="flex items-center justify-between gap-4">
         <Button onClick={onBack} variant="outline">
           <ArrowLeft />

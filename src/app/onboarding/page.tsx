@@ -2,6 +2,7 @@ import db from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import OnboardingForm from "./components/OnboardingForm";
 import { getRestaurantMenuById } from "@/data/get-menu-category-by-id";
+import { getOnboardingData } from "@/data/get-onboarding-data";
 
 export default async function OnboardingPage({
   searchParams,
@@ -55,6 +56,16 @@ export default async function OnboardingPage({
     );
   }
 
+  if (!restaurant?.id) {
+    return <p>Restaurante não encontrado ou carregando...</p>;
+  }
+
+  const restaurantFullData = await getOnboardingData(restaurant.id);
+
+  if (!restaurantFullData) {
+    return <p>Carregando ou sem dados...</p>;
+  }
+
   return (
     <main className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="mx-auto max-w-4xl">
@@ -80,6 +91,7 @@ export default async function OnboardingPage({
           initialRestaurantData={restaurant}
           menuCategories={categories}
           contacts={restaurant?.contacts ?? null}
+          restaurantFullData={restaurantFullData}
         />
       </div>
     </main>
