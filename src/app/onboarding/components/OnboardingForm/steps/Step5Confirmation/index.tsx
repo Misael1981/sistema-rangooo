@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 import { ArrowLeft } from "lucide-react";
 import CardCategories from "./components/CardCategories";
+import { RestaurantOnboardingDTO } from "@/dtos/restaurant-onboarding.dto";
 
 type Step4ConfirmationProps = {
   restaurantId?: string | null;
@@ -22,7 +22,7 @@ type Step4ConfirmationProps = {
   };
   onSuccess: () => void;
   onBack: () => void;
-  restaurantFullData: RestaurantFullDTO | null;
+  restaurantFullData: RestaurantOnboardingDTO | null;
 };
 
 const Step5Confirmation = ({

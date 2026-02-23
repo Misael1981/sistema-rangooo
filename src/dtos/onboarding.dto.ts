@@ -63,3 +63,22 @@ export interface MenuProductWithCategoryDTO {
   imageUrl: string | null;
   ingredients: string[];
 }
+
+export type TimeSlotType = "BREAKFAST" | "LUNCH" | "DINNER" | "SPECIAL";
+
+export interface TimeSlot {
+  type: TimeSlotType;
+  open: string;
+  close: string;
+}
+
+export interface BusinessDay {
+  isClosed: boolean;
+  timeSlots: TimeSlot[];
+}
+
+export interface OpeningHoursFormValues {
+  openingHours: {
+    businessHours: BusinessDay[];
+  };
+}

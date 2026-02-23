@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import { ownerSchema } from "@/schemas/onboarding-schema";
-import { ContactNumber, Restaurant } from "@prisma/client";
+import { ContactNumber } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
-import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 import z from "zod";
 import Step1OwnerData from "./steps/Step1OwnerData";
 import Step2EstablishmentData from "./steps/Step2EstablishmentData";
 import Step3ConsumptionMethodsAndSchedules from "./steps/Step3ConsumptionMethodsAndSchedules";
 import Step4MenuEstablishmentData from "./steps/Step4MenuEstablishmentData";
 import Step5Confirmation from "./steps/Step5Confirmation";
+import {
+  ConsumptionMethodDTO,
+  PaymentMethodDTO,
+  RestaurantOnboardingDTO,
+} from "@/dtos/restaurant-onboarding.dto";
 
 type OnboardingFormProps = {
   token: string;
@@ -22,10 +26,13 @@ type OnboardingFormProps = {
     onboardingStep?: number;
   };
   restaurantId?: string;
-  initialRestaurantData: Restaurant | null;
+  initialRestaurantData: RestaurantOnboardingDTO | null;
   menuCategories: MenuCategoryData[];
   contacts: ContactNumber[] | null;
-  restaurantFullData: RestaurantFullDTO | null;
+  restaurantFullData: RestaurantOnboardingDTO | null;
+  consumptionMethods: ConsumptionMethodDTO[];
+  paymentMethods: PaymentMethodDTO[];
+  deliveryFee: number;
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -38,6 +45,9 @@ export default function OnboardingForm({
   menuCategories,
   contacts,
   restaurantFullData,
+  consumptionMethods,
+  paymentMethods,
+  deliveryFee,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -96,6 +106,10 @@ export default function OnboardingForm({
           onSuccess={nextStep}
           onBack={prevStep}
           restaurantId={initialRestaurantData?.id}
+          consumptionMethods={consumptionMethods}
+          paymentMethods={paymentMethods}
+          deliveryFee={deliveryFee}
+          token={token}
         />
       )}
 

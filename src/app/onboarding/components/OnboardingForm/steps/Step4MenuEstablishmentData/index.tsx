@@ -16,6 +16,7 @@ import { Restaurant } from "@prisma/client";
 import SelectedTableName from "./components/SelectedTableName";
 import AdditionalProductsCard from "./components/AdditionalProductsCard";
 import ProductsListSession from "./components/ProductsListSession";
+import { RestaurantOnboardingDTO } from "@/dtos/restaurant-onboarding.dto";
 
 export type MenuAction =
   | { type: "SET_CATEGORIES"; payload: MenuCategoryData[] }
@@ -34,7 +35,7 @@ type Step3MenuEstablishmentDataProps = {
   };
   onSuccess: () => void;
   onBack: () => void;
-  initialRestaurantData: Restaurant | null;
+  initialRestaurantData: RestaurantOnboardingDTO | null;
   menuCategories: MenuCategoryData[] | null;
   token: string;
 };

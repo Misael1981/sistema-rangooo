@@ -28,19 +28,6 @@ export default async function OnboardingPage({
     redirect("/login?message=Este convite já foi utilizado.");
   }
 
-  const restaurant = invite.restaurantId
-    ? await db.restaurant.findUnique({
-        where: { id: invite.restaurantId },
-        include: {
-          contacts: true,
-        },
-      })
-    : null;
-
-  const categories = restaurant?.id
-    ? await getRestaurantMenuById(restaurant.id)
-    : [];
-
   const isExpired = new Date() > invite.expiresAt;
   if (isExpired) {
     return (
@@ -56,15 +43,23 @@ export default async function OnboardingPage({
     );
   }
 
-  if (!restaurant?.id) {
-    return <p>Restaurante não encontrado ou carregando...</p>;
-  }
+  const restaurant = invite?.restaurantId
+    ? await getOnboardingData(invite.restaurantId)
+    : null;
 
-  const restaurantFullData = await getOnboardingData(restaurant.id);
+  const categories = restaurant?.id
+    ? await getRestaurantMenuById(restaurant.id)
+    : [];
 
-  if (!restaurantFullData) {
-    return <p>Carregando ou sem dados...</p>;
-  }
+  const consumptionMethods = restaurant?.consumptionMethods ?? [];
+  const paymentMethods = restaurant?.paymentMethods ?? [];
+  const deliveryFee = Number(restaurant?.deliveryFee ?? 0);
+
+  const cleanRestaurantFullData = JSON.parse(JSON.stringify(restaurant));
+  const cleanConsumptionMethods = JSON.parse(
+    JSON.stringify(consumptionMethods),
+  );
+  const cleanPaymentMethods = JSON.parse(JSON.stringify(paymentMethods));
 
   return (
     <main className="min-h-screen bg-slate-50 py-12 px-4">
@@ -91,7 +86,10 @@ export default async function OnboardingPage({
           initialRestaurantData={restaurant}
           menuCategories={categories}
           contacts={restaurant?.contacts ?? null}
-          restaurantFullData={restaurantFullData}
+          restaurantFullData={cleanRestaurantFullData}
+          consumptionMethods={cleanConsumptionMethods}
+          paymentMethods={cleanPaymentMethods}
+          deliveryFee={deliveryFee}
         />
       </div>
     </main>

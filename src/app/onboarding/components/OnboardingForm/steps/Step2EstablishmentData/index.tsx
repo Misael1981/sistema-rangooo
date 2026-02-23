@@ -22,7 +22,8 @@ import {
   generalInfoSchema,
 } from "@/schemas/onboarding-schema";
 import z from "zod";
-import { ContactNumber, Restaurant } from "@prisma/client";
+import { ContactNumber } from "@prisma/client";
+import { RestaurantOnboardingDTO } from "@/dtos/restaurant-onboarding.dto";
 
 type Step2Payload = {
   restaurantId: string;
@@ -44,7 +45,7 @@ type Step2EstablishmentDataProps = {
   contacts: ContactNumber[] | null;
   onSuccess: () => void;
   onBack: () => void;
-  initialRestaurantData: Restaurant | null;
+  initialRestaurantData: RestaurantOnboardingDTO | null;
 };
 
 type SocialMedia = {
@@ -77,7 +78,12 @@ const Step2EstablishmentData = ({
     general: {
       name: initialRestaurantData?.name ?? "",
       description: initialRestaurantData?.description ?? "",
-      category: initialRestaurantData?.category ?? "RESTAURANT",
+      category: initialRestaurantData?.category as
+        | "RESTAURANT"
+        | "PIZZARIA"
+        | "HAMBURGUERIA"
+        | "SORVETERIA"
+        | "ADEGA",
       slug: initialRestaurantData?.slug ?? "",
     },
     address: {

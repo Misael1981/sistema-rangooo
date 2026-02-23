@@ -70,3 +70,27 @@ export const productSchema = z.object({
     .or(z.literal("")),
   description: z.string().nullable().optional(),
 });
+
+export const methodsSchema = z
+  .object({
+    consumptionMethods: z.array(
+      z.enum(["DINE_IN", "PICKUP", "DELIVERY"] as const),
+    ),
+    paymentMethods: z.array(
+      z.enum(["CASH", "PIX", "CREDIT_CARD", "DEBIT_CARD"] as const),
+    ),
+    deliveryFee: z.coerce
+      .number()
+      .min(0)
+      .optional()
+      .transform((v) => (Number.isNaN(v) ? undefined : v)),
+  })
+  .refine(
+    (data) =>
+      !data.consumptionMethods.includes("DELIVERY") ||
+      (data.deliveryFee ?? 0) > 0,
+    {
+      message: "Informe o valor do frete para entrega",
+      path: ["deliveryFee"],
+    },
+  );
