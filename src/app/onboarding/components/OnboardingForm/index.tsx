@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Step1OwnerData from "./steps/Step1OwnerData";
-import Step2EstablishmentData from "./steps/Step2EstablishmentData";
-import Step3MenuEstablishmentData from "./steps/Step3MenuEstablishmentData";
-import Step4Confirmation from "./steps/Step4Confirmation";
 import { ownerSchema } from "@/schemas/onboarding-schema";
-import z from "zod";
 import { ContactNumber, Restaurant } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
 import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
+import z from "zod";
+import Step1OwnerData from "./steps/Step1OwnerData";
+import Step2EstablishmentData from "./steps/Step2EstablishmentData";
+import Step3ConsumptionMethodsAndSchedules from "./steps/Step3ConsumptionMethodsAndSchedules";
+import Step4MenuEstablishmentData from "./steps/Step4MenuEstablishmentData";
+import Step5Confirmation from "./steps/Step5Confirmation";
 
 type OnboardingFormProps = {
   token: string;
@@ -62,7 +63,7 @@ export default function OnboardingForm({
   return (
     <div className="space-y-8 bg-white p-8 rounded-xl shadow-sm border">
       <div className="flex justify-between mb-8">
-        {[1, 2, 3, 4].map((s) => (
+        {[1, 2, 3, 4, 5].map((s) => (
           <div
             key={s}
             className={`h-2 w-full mx-1 rounded-full ${s <= currentStep ? "bg-orange-500" : "bg-gray-200"}`}
@@ -91,7 +92,15 @@ export default function OnboardingForm({
       )}
 
       {currentStep === 3 && (
-        <Step3MenuEstablishmentData
+        <Step3ConsumptionMethodsAndSchedules
+          onSuccess={nextStep}
+          onBack={prevStep}
+          restaurantId={initialRestaurantData?.id}
+        />
+      )}
+
+      {currentStep === 4 && (
+        <Step4MenuEstablishmentData
           restaurantId={initialRestaurantData?.id}
           data={formData}
           onSuccess={nextStep}
@@ -102,8 +111,8 @@ export default function OnboardingForm({
         />
       )}
 
-      {currentStep === 4 && (
-        <Step4Confirmation
+      {currentStep === 5 && (
+        <Step5Confirmation
           restaurantId={activeRestaurantId}
           data={initialData}
           onSuccess={nextStep}

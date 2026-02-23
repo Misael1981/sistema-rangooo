@@ -25,7 +25,7 @@ type Step4ConfirmationProps = {
   restaurantFullData: RestaurantFullDTO | null;
 };
 
-const Step4Confirmation = ({
+const Step5Confirmation = ({
   onSuccess,
   onBack,
   restaurantFullData,
@@ -58,4 +58,4 @@ const Step4Confirmation = ({
   );
 };
 
-export default Step4Confirmation;
+export default Step5Confirmation;

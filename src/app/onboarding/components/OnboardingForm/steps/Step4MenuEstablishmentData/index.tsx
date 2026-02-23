@@ -39,7 +39,7 @@ type Step3MenuEstablishmentDataProps = {
   token: string;
 };
 
-const Step3MenuEstablishmentData = ({
+const Step4MenuEstablishmentData = ({
   restaurantId,
   onSuccess,
   onBack,
@@ -153,4 +153,4 @@ const Step3MenuEstablishmentData = ({
   );
 };
 
-export default Step3MenuEstablishmentData;
+export default Step4MenuEstablishmentData;
