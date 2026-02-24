@@ -40,6 +40,23 @@ export type MenuCategoryDTO = {
 export type RestaurantFullDTO = {
   id: string;
   name: string;
+  slug: string | null;
+  description: string | null;
+  email: string | null;
+
+  street: string | null;
+  number: string | null;
+  neighborhood: string | null;
+  complement: string | null;
+  city: string | null;
+  state: string | null;
+
+  avatarImageUrl: string | null;
+
+  category: string;
+  deliveryFee: number | null;
+
+  socialMedia: string[] | null;
   contacts: ContactDTO[];
   menuCategories: MenuCategoryDTO[];
 };

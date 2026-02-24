@@ -16,6 +16,7 @@ import {
   PaymentMethodDTO,
   RestaurantOnboardingDTO,
 } from "@/dtos/restaurant-onboarding.dto";
+import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 
 type OnboardingFormProps = {
   token: string;
@@ -30,7 +31,7 @@ type OnboardingFormProps = {
   initialRestaurantData: RestaurantOnboardingDTO | null;
   menuCategories: MenuCategoryData[];
   contacts: ContactNumber[] | null;
-  restaurantFullData: RestaurantOnboardingDTO | null;
+  restaurantFullData: RestaurantFullDTO | null;
   consumptionMethods: ConsumptionMethodDTO[];
   paymentMethods: PaymentMethodDTO[];
   deliveryFee: number;
