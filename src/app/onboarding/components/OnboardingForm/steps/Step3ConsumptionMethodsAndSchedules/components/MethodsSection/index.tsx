@@ -58,11 +58,6 @@ const MethodsSection = ({
     },
   });
 
-  const {
-    control,
-    formState: { errors },
-  } = form;
-
   const onSubmit = async (data: MethodsFormData) => {
     try {
       const result = await updateRestaurantMethods(
@@ -85,7 +80,7 @@ const MethodsSection = ({
 
   return (
     <section className="w-full ">
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-2xl border border-gray-300">
+      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-gray-300">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FieldGroup className="flex flex-col gap-8 md:flex-row justify-center">
             {/* SEÇÃO: MÉTODOS DE CONSUMO */}

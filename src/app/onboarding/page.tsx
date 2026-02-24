@@ -61,6 +61,8 @@ export default async function OnboardingPage({
   );
   const cleanPaymentMethods = JSON.parse(JSON.stringify(paymentMethods));
 
+  const businessHours = restaurant?.businessHours ?? [];
+
   return (
     <main className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="mx-auto max-w-4xl">
@@ -90,6 +92,7 @@ export default async function OnboardingPage({
           consumptionMethods={cleanConsumptionMethods}
           paymentMethods={cleanPaymentMethods}
           deliveryFee={deliveryFee}
+          businessHours={businessHours}
         />
       </div>
     </main>

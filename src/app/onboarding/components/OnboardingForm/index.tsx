@@ -11,6 +11,7 @@ import Step3ConsumptionMethodsAndSchedules from "./steps/Step3ConsumptionMethods
 import Step4MenuEstablishmentData from "./steps/Step4MenuEstablishmentData";
 import Step5Confirmation from "./steps/Step5Confirmation";
 import {
+  BusinessHourDTO,
   ConsumptionMethodDTO,
   PaymentMethodDTO,
   RestaurantOnboardingDTO,
@@ -33,6 +34,7 @@ type OnboardingFormProps = {
   consumptionMethods: ConsumptionMethodDTO[];
   paymentMethods: PaymentMethodDTO[];
   deliveryFee: number;
+  businessHours: BusinessHourDTO[] | null;
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -48,6 +50,7 @@ export default function OnboardingForm({
   consumptionMethods,
   paymentMethods,
   deliveryFee,
+  businessHours,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -110,6 +113,7 @@ export default function OnboardingForm({
           paymentMethods={paymentMethods}
           deliveryFee={deliveryFee}
           token={token}
+          businessHours={businessHours}
         />
       )}
 

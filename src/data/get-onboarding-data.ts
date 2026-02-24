@@ -1,3 +1,4 @@
+import { TimeSlotDTO } from "@/dtos/restaurant-onboarding.dto";
 import { db } from "@/lib/prisma";
 
 export const getOnboardingData = async (restaurantId: string) => {
@@ -22,6 +23,15 @@ export const getOnboardingData = async (restaurantId: string) => {
       zipCode: true,
       deliveryFee: true,
       onboardingStep: true,
+
+      businessHours: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          timeSlots: true,
+          isClosed: true,
+        },
+      },
 
       contacts: {
         select: { id: true, number: true, type: true, isPrimary: true },
@@ -83,6 +93,13 @@ export const getOnboardingData = async (restaurantId: string) => {
       updatedAt: new Date(),
       restaurantId: restaurant.id,
       label: null,
+    })),
+
+    businessHours: restaurant.businessHours.map((bh) => ({
+      id: bh.id,
+      dayOfWeek: bh.dayOfWeek,
+      isClosed: bh.isClosed,
+      timeSlots: (bh.timeSlots as unknown as TimeSlotDTO[]) || [],
     })),
 
     menuCategories: restaurant.menuCategories.map((category) => ({

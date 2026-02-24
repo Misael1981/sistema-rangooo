@@ -1,22 +1,23 @@
 "use server";
 
 import db from "@/lib/prisma";
+import { businessHoursSchema } from "@/schemas/business-hours-schema";
 import { methodsSchema } from "@/schemas/onboarding-schema";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
 type Step = "methods" | "schedules";
 
+type RestaurantUpdateData =
+  | z.infer<typeof methodsSchema>
+  | z.infer<typeof businessHoursSchema>;
+
 export const updateRestaurantMethods = async (
-  data: z.infer<typeof methodsSchema>,
+  data: RestaurantUpdateData,
   restaurantId: string,
   token: string,
   step: Step,
 ) => {
-  const deliveryFee = data.consumptionMethods.includes("DELIVERY")
-    ? (data.deliveryFee ?? 0)
-    : 0;
-
   try {
     if (!restaurantId) {
       return { error: "Restaurante não encontrado." };
@@ -24,31 +25,79 @@ export const updateRestaurantMethods = async (
 
     switch (step) {
       case "methods": {
-        await db.$transaction([
+        const methodsData = methodsSchema.parse(data);
+
+        const deliveryFee = methodsData.consumptionMethods.includes("DELIVERY")
+          ? (methodsData.deliveryFee ?? 0)
+          : 0;
+
+        const operations = [
           db.restaurantConsumptionMethod.updateMany({
             where: { restaurantId },
             data: { isActive: false },
           }),
-
-          ...data.consumptionMethods.map((method) =>
+          db.restaurantPaymentMethod.updateMany({
+            where: { restaurantId },
+            data: { isActive: false },
+          }),
+          db.restaurant.update({
+            where: { id: restaurantId },
+            data: { deliveryFee },
+          }),
+          ...methodsData.consumptionMethods.map((method) =>
             db.restaurantConsumptionMethod.upsert({
               where: { restaurantId_method: { restaurantId, method } },
               update: { isActive: true },
               create: { restaurantId, method, isActive: true },
             }),
           ),
-
-          db.restaurant.update({
-            where: { id: restaurantId },
-            data: { deliveryFee },
-          }),
-        ]);
+          ...methodsData.paymentMethods.map((method) =>
+            db.restaurantPaymentMethod.upsert({
+              where: { restaurantId_method: { restaurantId, method } },
+              update: { isActive: true },
+              create: { restaurantId, method, isActive: true },
+            }),
+          ),
+        ];
+        await db.$transaction(operations);
 
         break;
       }
 
       case "schedules": {
-        // Aqui será código de horários
+        const parsed = businessHoursSchema.parse(data);
+        const businessHoursData = parsed.businessHours;
+
+        await db.$transaction([
+          ...businessHoursData.map((bh) =>
+            db.businessHours.upsert({
+              where: {
+                restaurantId_dayOfWeek: {
+                  restaurantId,
+                  dayOfWeek: bh.dayOfWeek,
+                },
+              },
+              update: {
+                isClosed: bh.isClosed,
+                timeSlots: bh.timeSlots,
+              },
+              create: {
+                restaurantId,
+                dayOfWeek: bh.dayOfWeek,
+                isClosed: bh.isClosed,
+                timeSlots: bh.timeSlots,
+              },
+            }),
+          ),
+          db.restaurant.update({
+            where: { id: restaurantId },
+            data: {
+              onboardingStep: 4,
+            },
+          }),
+        ]);
+
+        break;
       }
     }
 

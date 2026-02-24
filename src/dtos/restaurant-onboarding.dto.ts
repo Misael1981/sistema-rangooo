@@ -39,6 +39,19 @@ export interface MenuCategoryDTO {
   additionalIngredients: AdditionalIngredientDTO[];
 }
 
+export interface TimeSlotDTO {
+  type: "BREAKFAST" | "LUNCH" | "DINNER" | "SPECIAL";
+  open: string;
+  close: string;
+}
+
+export interface BusinessHourDTO {
+  id: string;
+  dayOfWeek: number;
+  isClosed: boolean;
+  timeSlots: TimeSlotDTO[];
+}
+
 export interface RestaurantOnboardingDTO {
   id: string;
   name: string;
@@ -58,6 +71,7 @@ export interface RestaurantOnboardingDTO {
   zipCode: string | null;
   deliveryFee: number | null;
 
+  businessHours: BusinessHourDTO[];
   contacts: ContactDTO[];
   paymentMethods: PaymentMethodDTO[];
   consumptionMethods: ConsumptionMethodDTO[];
