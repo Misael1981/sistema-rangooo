@@ -88,7 +88,7 @@ const Step5Confirmation = ({
         return;
       }
 
-      router.push(`/onboarding/sucesso?token=${token}`);
+      router.push(`/onboarding/sucesso?id=${id}`);
     });
   };
 
