@@ -149,6 +149,7 @@ model Restaurant {
   street              String?
   zipCode             String?
   email               String?
+
   agentVersion        String?
   lastPrintedAt       DateTime?
   printerConfig       Json?
@@ -156,6 +157,7 @@ model Restaurant {
   printerType         String?
   printingToken       String?                       @unique
   deliveryFee         Decimal?                      @db.Decimal(6, 2)
+  
   isConfigured        Boolean                       @default(false)
   onboardingStep      Int                           @default(1)
   onboardingCompleted Boolean                       @default(false)

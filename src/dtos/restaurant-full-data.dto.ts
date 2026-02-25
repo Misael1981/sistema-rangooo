@@ -12,6 +12,18 @@ export type ProductDTO = {
   updatedAt: string;
 };
 
+export type ConsumptionMethodsDTO = {
+  id: string;
+  method: string;
+  isActive: boolean;
+};
+
+export type PaymentMethodsDTO = {
+  id: string;
+  method: string;
+  isActive: boolean;
+};
+
 export type AdditionalProductDTO = {
   id: string;
   name: string;
@@ -37,6 +49,18 @@ export type MenuCategoryDTO = {
   additionalProducts: AdditionalProductDTO[];
 };
 
+export type TimeSlotDTO = {
+  close: string;
+  open: string;
+};
+
+export type BusinessHoursDTO = {
+  id: string;
+  dayOfWeek: number;
+  isClosed: boolean;
+  timeSlots: TimeSlotDTO[];
+};
+
 export type RestaurantFullDTO = {
   id: string;
   name: string;
@@ -56,6 +80,9 @@ export type RestaurantFullDTO = {
   category: string;
   deliveryFee: number | null;
 
+  businessHours: BusinessHoursDTO[];
+  paymentMethods: PaymentMethodsDTO[];
+  consumptionMethods: ConsumptionMethodsDTO[];
   socialMedia: string[] | null;
   contacts: ContactDTO[];
   menuCategories: MenuCategoryDTO[];

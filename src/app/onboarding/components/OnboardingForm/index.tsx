@@ -137,6 +137,7 @@ export default function OnboardingForm({
           onSuccess={nextStep}
           onBack={prevStep}
           restaurantFullData={restaurantFullData}
+          token={token}
         />
       )}
     </div>
