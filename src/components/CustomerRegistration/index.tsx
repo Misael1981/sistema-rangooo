@@ -31,11 +31,13 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { submitApplication } from "@/app/_actions/apply";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 type FormValues = z.infer<typeof formSchema>;
 
 const CustomerRegistration = () => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -50,19 +52,21 @@ const CustomerRegistration = () => {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    const result = await submitApplication(data);
+  const onSubmit = (data: FormValues) => {
+    startTransition(async () => {
+      const result = await submitApplication(data);
 
-    if (result?.error) {
-      toast.error(result.error);
-      return;
-    }
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
 
-    const params = new URLSearchParams({
-      name: result.name || "",
-      restaurant: result.restaurantName || "",
+      const params = new URLSearchParams({
+        name: result.name || "",
+        restaurant: result.restaurantName || "",
+      });
+      router.push(`/cadastro/sucesso?${params.toString()}`);
     });
-    router.push(`/cadastro/sucesso?${params.toString()}`);
   };
 
   return (
@@ -272,8 +276,9 @@ const CustomerRegistration = () => {
               type="submit"
               form="initial-registration"
               className="w-full"
+              disabled={isPending}
             >
-              Enviar
+              {isPending ? "Finalizando..." : "Enviar Cadastro"}
             </Button>
           </Field>
           <p className="text-center text-sm text-gray-500">
