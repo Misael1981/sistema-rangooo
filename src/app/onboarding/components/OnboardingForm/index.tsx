@@ -17,6 +17,7 @@ import {
   RestaurantOnboardingDTO,
 } from "@/dtos/restaurant-onboarding.dto";
 import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 type OnboardingFormProps = {
   token: string;
@@ -140,6 +141,7 @@ export default function OnboardingForm({
           token={token}
         />
       )}
+      <FloatingWhatsApp />
     </div>
   );
 }

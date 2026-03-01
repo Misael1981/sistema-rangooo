@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { Toaster } from "sonner";
+import StyledComponentsRegistry from "@/lib/styled-components-registry";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,9 +33,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${plusJakartaSans.variable} antialiased`}
       >
-        <Header />
-        <div>{children}</div>
-        <Toaster />
+        <StyledComponentsRegistry>
+          <Header />
+          {children}
+          <Toaster />
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

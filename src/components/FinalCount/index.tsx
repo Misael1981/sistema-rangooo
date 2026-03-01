@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { BsWhatsapp } from "react-icons/bs";
+import FloatingWhatsApp from "../FloatingWhatsApp";
 
 const msgWhatsapp =
   "Olá, gostaria de saber mais sobre o cadastro de estabelecimento no Rangooo!";
@@ -49,6 +52,7 @@ const FinalCount = () => {
           Sem compromisso, sem cartão de crédito
         </p>
       </div>
+      <FloatingWhatsApp />
     </footer>
   );
 };
