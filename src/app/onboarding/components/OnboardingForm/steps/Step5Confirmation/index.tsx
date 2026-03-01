@@ -101,7 +101,7 @@ const Step5Confirmation = ({
           seu estabelecimento estará pronto para receber pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6 p-0">
+      <CardContent className="space-y-6 p-0 border-none">
         <div className="flex items-center justify-center">
           <SubHeaderSteps tittle={name} />
         </div>

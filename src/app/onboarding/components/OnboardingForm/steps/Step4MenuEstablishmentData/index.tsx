@@ -114,7 +114,7 @@ const Step4MenuEstablishmentData = ({
           itens que ficarão disponíveis para seus clientes realizarem pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-h-100 space-y-8 p-0">
+      <CardContent className="min-h-100 space-y-8 p-0 border-none">
         <MenuCategoriesList
           categories={categoriesSummary}
           onSelect={handleSelectCategory}

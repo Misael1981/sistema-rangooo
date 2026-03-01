@@ -127,7 +127,7 @@ const Step2EstablishmentData = ({
           serão exibidas para seus clientes.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-8 p-0">
+      <CardContent className="space-y-8 p-0 border-none">
         <GeneralInformation
           onUpdate={(data) => handleUpdate("general", data)}
           defaultValues={formData.general}

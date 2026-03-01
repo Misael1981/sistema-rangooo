@@ -72,7 +72,7 @@ const Step1OwnerData = ({
   };
 
   return (
-    <Card className="border-none">
+    <Card className="border-none border-0">
       <CardHeader className="p-0">
         <CardTitle>
           Step 1 - Informações do Dono ou Responsável do Estabelecimento
@@ -83,7 +83,7 @@ const Step1OwnerData = ({
           acesso ao Rangooo e garantir a segurança da plataforma.
         </CardDescription>
       </CardHeader>
-      <CardContent className=" p-0">
+      <CardContent className="border-none p-0">
         <form id="owner-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Field>
