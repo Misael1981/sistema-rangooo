@@ -31,7 +31,7 @@ const HeroSection = () => {
             </p>
             <div className="mb-8 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/sobre/cadastro"
+                href="/cadastro"
                 className="transform rounded-xl bg-white px-8 py-4 text-center text-lg font-bold text-orange-600 shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-gray-100"
               >
                 Começar Agora - Grátis

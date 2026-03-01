@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { BsWhatsapp } from "react-icons/bs";
 
 const msgWhatsapp =
   "Olá, gostaria de saber mais sobre o cadastro de estabelecimento no Rangooo!";
@@ -21,15 +22,15 @@ const FinalCount = () => {
 
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Link
-            href="/sobre/cadastro"
-            className="rounded-xl bg-white px-8 py-4 text-lg font-bold text-orange-600 shadow-2xl transition-all duration-300 hover:bg-gray-100"
+            href="/cadastro"
+            className="rounded-xl bg-white px-8 py-4 text-lg flex items-center justify-center font-bold text-orange-600 shadow-2xl transition-all duration-300 hover:bg-orange-300 hover:text-white hover:shadow-none hover:border-orange-60"
           >
             Testar Grátis por 7 Dias
           </Link>
           <Button
             asChild
             variant="ghost"
-            className="rounded-xl border-2 border-white px-8 py-8 text-lg font-bold text-white transition-all duration-300 hover:bg-white/10"
+            className="rounded-xl border-2 border-white px-8 py-8 text-lg font-bold text-white transition-all duration-300 hover:bg-white/20 hover:text-green-500"
           >
             <a
               href={`https://wa.me/5535999110933?text=${encodeURIComponent(
@@ -38,6 +39,7 @@ const FinalCount = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <BsWhatsapp className="mr-2" />
               Falar com Especialista
             </a>
           </Button>
