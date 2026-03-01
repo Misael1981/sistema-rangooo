@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field";
 import { gallerySchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import imageCompression from "browser-image-compression";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -39,23 +40,39 @@ const GalleryEstablishment = ({
   }, [defaultValues, form]);
 
   const uploadToCloudinaryClient = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append(
-      "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
-    );
+    const options = {
+      maxSizeMB: 0.7,
+      maxWidthOrHeight: 1080,
+      useWebWorker: true,
+    };
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    try {
+      const compressedFile = await imageCompression(file, options);
 
-    const data = await response.json();
-    return { url: data.secure_url, publicId: data.public_id };
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append(
+        "upload_preset",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!,
+      );
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const data = await response.json();
+      return {
+        url: data.secure_url,
+        publicId: data.public_id,
+      };
+    } catch (error) {
+      console.error("Erro na compressão ou upload:", error);
+      throw error;
+    }
   };
 
   const onSubmit = async (data: GalleryValue) => {
