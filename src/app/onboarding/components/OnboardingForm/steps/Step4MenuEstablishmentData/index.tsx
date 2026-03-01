@@ -106,15 +106,15 @@ const Step4MenuEstablishmentData = ({
     productsCategory.find((cat) => cat.id === state.selectedCategoryId) ?? null;
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none">
+      <CardHeader className="p-0">
         <CardTitle>Step 3 - Cardápio e Produtos</CardTitle>
         <CardDescription>
           Monte seu cardápio adicionando categorias e produtos. Esses são os
           itens que ficarão disponíveis para seus clientes realizarem pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-h-100 space-y-8">
+      <CardContent className="min-h-100 space-y-8 p-0">
         <MenuCategoriesList
           categories={categoriesSummary}
           onSelect={handleSelectCategory}

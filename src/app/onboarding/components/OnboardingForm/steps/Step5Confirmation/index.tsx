@@ -93,15 +93,15 @@ const Step5Confirmation = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none">
+      <CardHeader className="p-0">
         <CardTitle>Step 4 - Revisão e Confirmação</CardTitle>
         <CardDescription>
           Revise todas as informações antes de finalizar. Após a confirmação,
           seu estabelecimento estará pronto para receber pedidos.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 p-0">
         <div className="flex items-center justify-center">
           <SubHeaderSteps tittle={name} />
         </div>

@@ -116,8 +116,8 @@ const Step3ConsumptionMethodsAndSchedules = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none">
+      <CardHeader className="p-0">
         <CardTitle>
           Step 3 - Métodos de Consumo e Horários de Funcionamento
         </CardTitle>
@@ -126,7 +126,7 @@ const Step3ConsumptionMethodsAndSchedules = ({
           de consumo que você que terá na sua página.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <SubHeaderSteps tittle="Métodos de Consumo" />
 
         <MethodsSection

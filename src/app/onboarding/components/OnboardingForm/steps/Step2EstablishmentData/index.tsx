@@ -116,8 +116,8 @@ const Step2EstablishmentData = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-none">
+      <CardHeader className="p-0">
         <CardTitle className="text-xl">
           Step 2 - Informações do Estabelecimento
         </CardTitle>
@@ -127,7 +127,7 @@ const Step2EstablishmentData = ({
           serão exibidas para seus clientes.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-8">
+      <CardContent className="space-y-8 p-0">
         <GeneralInformation
           onUpdate={(data) => handleUpdate("general", data)}
           defaultValues={formData.general}
