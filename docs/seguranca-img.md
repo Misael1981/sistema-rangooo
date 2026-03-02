@@ -61,3 +61,73 @@ const onSubmit = async (data: z.infer<typeof productSchema>) => {
   }
 };
 ```
+
+O que está acontecendo por baixo dos panos:
+
+Na Edição: O valor inicial vem do banco de dados como uma URL (string).
+
+No Novo Upload: Quando o usuário clica no input e seleciona um arquivo, o valor muda para um objeto File.
+
+Por isso o seu instanceof File é matador: ele separa o joio do trigo. Se for string, você não faz nada (já está no banco). Se for File, você comprime e sobe pro Cloudinary.
+
+Ajuste Fino no seu onSubmit
+Para o código não "quebrar" se o usuário não mexer na imagem, faça essa pequena conferência de tipos. Vou usar o exemplo do seu gallerySchema:
+
+```
+const onSubmit = async (data: z.infer<typeof gallerySchema>) => {
+  setIsSubmitting(true);
+
+  try {
+    // 1. Tratando o Avatar
+    let finalAvatarUrl = data.avatarImageUrl;
+    if (data.avatarImageUrl instanceof File) {
+      const isValid = validateImageFile(data.avatarImageUrl);
+      if (!isValid) {
+        setIsSubmitting(false);
+        return;
+      }
+      const res = await uploadToCloudinaryClient(data.avatarImageUrl);
+      finalAvatarUrl = res.url;
+    }
+
+    // 2. Tratando a Capa
+    let finalCoverUrl = data.coverImageUrl;
+    if (data.coverImageUrl instanceof File) {
+      const isValid = validateImageFile(data.coverImageUrl);
+      if (!isValid) {
+        setIsSubmitting(false);
+        return;
+      }
+      const res = await uploadToCloudinaryClient(data.coverImageUrl);
+      finalCoverUrl = res.url;
+    }
+
+    // 3. Payload para o Banco
+    const payload = {
+      avatarImageUrl: finalAvatarUrl,
+      coverImageUrl: finalCoverUrl,
+      // ... outros campos
+    };
+
+    // await seuUpsert(payload)...
+
+  } catch (error) {
+    console.error(error);
+    toast.error("Erro ao salvar galeria");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+```
+
+Dica de Ouro para o refine
+No seu Zod, o .refine((val) => val, ...) está apenas checando se existe algo. Se você quiser ser mais rigoroso para evitar que o "arrombado" mande um PDF, você pode melhorar o refine assim:
+
+```
+.refine((val) => {
+  if (val instanceof File) {
+    return val.type.startsWith("image/");
+  }
+  return typeof val === "string"; // Se for string (URL), tá valendo
+}, "Formato de arquivo inválido. Use apenas imagens.")
+```

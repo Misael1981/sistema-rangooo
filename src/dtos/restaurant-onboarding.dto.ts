@@ -60,6 +60,7 @@ export interface RestaurantOnboardingDTO {
   avatarImageUrl: string | null;
   coverImageUrl: string | null;
   category: string;
+  plan: string;
   socialMedia: unknown | null;
   email: string | null;
   street: string | null;

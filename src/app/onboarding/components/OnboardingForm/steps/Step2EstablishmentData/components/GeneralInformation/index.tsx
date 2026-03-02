@@ -12,10 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CATEGORY_LABELS } from "@/maps/maps-labels";
+import { CATEGORY_LABELS, PLANS_RESTAURANT } from "@/maps/maps-labels";
 import { generalInfoSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RestaurantCategory } from "@prisma/client";
+import { PlanType, RestaurantCategory } from "@prisma/client";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -45,6 +45,7 @@ const GeneralInformation = ({
     mode: "onChange",
     defaultValues: {
       name: "",
+      plan: PlanType.BASICO,
       category: RestaurantCategory.RESTAURANT,
       slug: "",
       description: "",
@@ -101,6 +102,37 @@ const GeneralInformation = ({
       </h3>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FieldGroup className="grid gap-6 md:grid-cols-2">
+          <div className="md:col-span-2 flex justify-center">
+            <Field className="max-w-sm">
+              <FieldLabel>Qual plano você deseja seguir?</FieldLabel>
+              <Controller
+                name="plan"
+                control={form.control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o plano..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(
+                        Object.keys(PLANS_RESTAURANT) as Array<
+                          keyof typeof PLANS_RESTAURANT
+                        >
+                      ).map((planKey) => (
+                        <SelectItem key={planKey} value={planKey}>
+                          {PLANS_RESTAURANT[planKey]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </Field>
+          </div>
+
           <Field>
             <FieldLabel>Nome do Estabelecimento</FieldLabel>
             <Input {...form.register("name")} />

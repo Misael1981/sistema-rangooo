@@ -156,12 +156,14 @@ model Restaurant {
   printerStatus       String?                       @default("disconnected")
   printerType         String?
   printingToken       String?                       @unique
-  deliveryFee         Decimal?                      @db.Decimal(6, 2)
   
+  deliveryFee         Decimal?                      @db.Decimal(6, 2)
   isConfigured        Boolean                       @default(false)
   onboardingStep      Int                           @default(1)
   onboardingCompleted Boolean                       @default(false)
   publishedAt         DateTime?
+  imagePublicId       String?
+  plan                PlanType                      @default(BASICO)
   businessHours       BusinessHours[]
   contacts            ContactNumber[]
   menuCategories      MenuCategory[]
@@ -400,4 +402,10 @@ enum AreaType {
   URBAN
   RURAL
   DISTRICT
+}
+
+enum PlanType {
+  BASICO
+  PRO
+  PREMIUM
 }

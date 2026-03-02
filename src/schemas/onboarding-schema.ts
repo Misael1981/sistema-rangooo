@@ -1,4 +1,4 @@
-import { ContactType, RestaurantCategory } from "@prisma/client";
+import { ContactType, PlanType, RestaurantCategory } from "@prisma/client";
 import z from "zod";
 
 export const ownerSchema = z.object({
@@ -9,6 +9,9 @@ export const ownerSchema = z.object({
 
 export const generalInfoSchema = z.object({
   name: z.string().min(2, "Nome obrigatório."),
+  plan: z.enum(PlanType, {
+    message: "Selecione um plano válido",
+  }),
   category: z.enum(RestaurantCategory, {
     message: "Selecione uma categoria válida",
   }),
