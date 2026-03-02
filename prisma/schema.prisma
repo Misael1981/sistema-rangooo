@@ -407,5 +407,4 @@ enum AreaType {
 enum PlanType {
   BASICO
   PRO
-  PREMIUM
 }

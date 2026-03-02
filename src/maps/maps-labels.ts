@@ -14,5 +14,4 @@ export const CATEGORY_LABELS: Record<
 export const PLANS_RESTAURANT: Record<PlanType, string> = {
   [PlanType.BASICO]: "Básico",
   [PlanType.PRO]: "Pró",
-  [PlanType.PREMIUM]: "Premium",
 };
