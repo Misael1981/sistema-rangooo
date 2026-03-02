@@ -78,7 +78,7 @@ const Step2EstablishmentData = ({
     general: {
       name: initialRestaurantData?.name ?? "",
       description: initialRestaurantData?.description ?? "",
-      plan: initialRestaurantData?.plan as "BASICO" | "PRO" | "PREMIUM",
+      plan: initialRestaurantData?.plan as "BASICO" | "PRO",
       category: initialRestaurantData?.category as
         | "RESTAURANT"
         | "PIZZARIA"
