@@ -63,6 +63,8 @@ export default async function OnboardingPage({
 
   const businessHours = restaurant?.businessHours ?? [];
 
+  const plan = restaurant?.plan;
+
   return (
     <main className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="mx-auto max-w-4xl">
@@ -93,6 +95,10 @@ export default async function OnboardingPage({
           paymentMethods={cleanPaymentMethods}
           deliveryFee={deliveryFee}
           businessHours={businessHours}
+          plan={plan}
+          useRangoooDelivery={restaurant?.useRangoooDelivery ?? false}
+          deliveryAreas={restaurant?.deliveryAreas ?? []}
+          systemSettings={restaurant?.systemSettings ?? null}
         />
       </div>
     </main>

@@ -12,7 +12,6 @@ export const getOnboardingData = async (restaurantId: string) => {
       avatarImageUrl: true,
       coverImageUrl: true,
       category: true,
-      plan: true,
       socialMedia: true,
       email: true,
       street: true,
@@ -24,6 +23,14 @@ export const getOnboardingData = async (restaurantId: string) => {
       zipCode: true,
       deliveryFee: true,
       onboardingStep: true,
+      useRangoooDelivery: true,
+      plan: true,
+      deliveryAreas: {
+        select: {
+          areaType: true,
+          fee: true,
+        },
+      },
 
       businessHours: {
         select: {
@@ -66,6 +73,10 @@ export const getOnboardingData = async (restaurantId: string) => {
 
   if (!restaurant) return null;
 
+  const settings = await db.systemSettings.findUnique({
+    where: { id: "global" },
+  });
+
   return {
     id: restaurant.id,
     name: restaurant.name,
@@ -86,6 +97,8 @@ export const getOnboardingData = async (restaurantId: string) => {
     zipCode: restaurant.zipCode,
     deliveryFee: Number(restaurant.deliveryFee ?? 0),
     onboardingStep: Number(restaurant.onboardingStep),
+    useRangoooDelivery: restaurant.useRangoooDelivery,
+    deliveryAreas: restaurant.deliveryAreas,
 
     paymentMethods: restaurant.paymentMethods,
     consumptionMethods: restaurant.consumptionMethods,
@@ -121,5 +134,12 @@ export const getOnboardingData = async (restaurantId: string) => {
         price: Number(i.price),
       })),
     })),
+    systemSettings: settings
+      ? {
+          URBAN: settings.urbanDeliveryFee,
+          RURAL: settings.ruralDeliveryFee,
+          DISTRICT: settings.districtDeliveryFee,
+        }
+      : null,
   };
 };

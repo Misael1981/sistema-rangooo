@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import MethodsSection from "./components/MethodsSection";
-import {} from "@prisma/client";
+import { AreaType, PlanType } from "@prisma/client";
 import {
   BusinessHourDTO,
   ConsumptionMethodDTO,
@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { updateRestaurantMethods } from "@/app/_actions/update-restaurant-methods";
 import { toast } from "sonner";
+import PlansSection from "./components/PlansSection";
 
 type Step3ConsumptionMethodsAndSchedulesProps = {
   onSuccess: () => void;
@@ -37,6 +38,17 @@ type Step3ConsumptionMethodsAndSchedulesProps = {
   businessHours: BusinessHourDTO[] | null;
   deliveryFee: number;
   token: string;
+  plan: PlanType | undefined;
+  useRangoooDelivery: boolean;
+  deliveryAreas: {
+    areaType: AreaType;
+    fee: number;
+  }[];
+  systemSettings: {
+    URBAN: number;
+    RURAL: number;
+    DISTRICT: number;
+  } | null;
 };
 
 const Step3ConsumptionMethodsAndSchedules = ({
@@ -48,6 +60,10 @@ const Step3ConsumptionMethodsAndSchedules = ({
   deliveryFee,
   token,
   businessHours,
+  plan,
+  useRangoooDelivery,
+  deliveryAreas,
+  systemSettings,
 }: Step3ConsumptionMethodsAndSchedulesProps) => {
   const formattedHours = useMemo(
     () =>
@@ -127,6 +143,14 @@ const Step3ConsumptionMethodsAndSchedules = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0 border-none">
+        <PlansSection
+          plan={plan}
+          useRangoooDelivery={useRangoooDelivery}
+          deliveryAreas={deliveryAreas}
+          systemSettings={systemSettings}
+          token={token}
+          restaurantId={restaurantId ?? ""}
+        />
         <SubHeaderSteps tittle="Métodos de Consumo" />
 
         <MethodsSection

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ownerSchema } from "@/schemas/onboarding-schema";
-import { ContactNumber } from "@prisma/client";
+import { AreaType, ContactNumber, PlanType } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
 import z from "zod";
 import Step1OwnerData from "./steps/Step1OwnerData";
@@ -37,6 +37,17 @@ type OnboardingFormProps = {
   paymentMethods: PaymentMethodDTO[];
   deliveryFee: number;
   businessHours: BusinessHourDTO[] | null;
+  plan: PlanType | undefined;
+  useRangoooDelivery: boolean;
+  deliveryAreas: {
+    areaType: AreaType;
+    fee: number;
+  }[];
+  systemSettings: {
+    URBAN: number;
+    RURAL: number;
+    DISTRICT: number;
+  } | null;
 };
 
 type OwnerValues = z.infer<typeof ownerSchema>;
@@ -53,6 +64,10 @@ export default function OnboardingForm({
   paymentMethods,
   deliveryFee,
   businessHours,
+  plan,
+  useRangoooDelivery,
+  deliveryAreas,
+  systemSettings,
 }: OnboardingFormProps) {
   const [currentStep, setCurrentStep] = useState(
     initialData.onboardingStep ?? 1,
@@ -116,6 +131,10 @@ export default function OnboardingForm({
           deliveryFee={deliveryFee}
           token={token}
           businessHours={businessHours}
+          plan={plan}
+          useRangoooDelivery={useRangoooDelivery}
+          deliveryAreas={deliveryAreas}
+          systemSettings={systemSettings}
         />
       )}
 
