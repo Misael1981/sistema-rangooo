@@ -45,7 +45,6 @@ const GeneralInformation = ({
     mode: "onChange",
     defaultValues: {
       name: "",
-      plan: PlanType.BASICO,
       category: RestaurantCategory.RESTAURANT,
       slug: "",
       description: "",
