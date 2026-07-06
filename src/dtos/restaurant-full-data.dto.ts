@@ -1,4 +1,4 @@
-import { ContactType } from "@prisma/client";
+import { ContactType } from "@misael1981/rangooo-database";
 
 export type ProductDTO = {
   id: string;

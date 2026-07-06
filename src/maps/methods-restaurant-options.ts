@@ -1,4 +1,4 @@
-import { PlanType } from "@prisma/client";
+import { PLAN, type PlanType } from "@/constants/plans";
 
 export const CONSUMPTION_METHODS = [
   { value: "DINE_IN", label: "Comer no local" },
@@ -21,19 +21,19 @@ export type PlanDetail = {
   id: PlanType;
   title: string;
   description: string;
-  features: string[]; // Dica: adicionei isso pra você listar os benefícios!
+  features: string[];
 };
 
 export const PLANS_DETAILS: PlanDetail[] = [
   {
-    id: PlanType.BASICO,
+    id: PLAN.BASICO,
     title: "Plano Básico",
     description:
       "Ideal para estabelecimentos que estão começando e desejam uma presença online simples. Inclui recursos essenciais para gerenciar seu cardápio, pedidos e clientes.",
     features: ["Cardápio Digital", "Gestão de Pedidos", "Entrega Própria"],
   },
   {
-    id: PlanType.PRO,
+    id: PLAN.PRO,
     title: "Plano Pro",
     description:
       "Nesse plano o estabelecimento tem acesso às entregas do Rangooo Entregas. O pedido chega direto para nossos entregadores parceiros, que cuidam de tudo para você.",

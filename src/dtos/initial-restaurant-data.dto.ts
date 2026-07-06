@@ -1,4 +1,4 @@
-import { RestaurantCategory } from "@prisma/client";
+import { RestaurantCategory } from "@misael1981/rangooo-database";
 
 export interface initialRestaurantData {
   number: string | null;

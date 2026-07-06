@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { businessHoursSchema } from "@/schemas/business-hours-schema";
 import { methodsSchema } from "@/schemas/onboarding-schema";
 import { revalidatePath } from "next/cache";

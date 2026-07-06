@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import MethodsSection from "./components/MethodsSection";
-import { AreaType, PlanType } from "@prisma/client";
 import {
+  AreaTypeDTO,
   BusinessHourDTO,
   ConsumptionMethodDTO,
   PaymentMethodDTO,
@@ -38,10 +38,10 @@ type Step3ConsumptionMethodsAndSchedulesProps = {
   businessHours: BusinessHourDTO[] | null;
   deliveryFee: number;
   token: string;
-  plan: PlanType | undefined;
+  plan: "BASICO" | "PRO" | undefined;
   useRangoooDelivery: boolean;
   deliveryAreas: {
-    areaType: AreaType;
+    areaType: AreaTypeDTO;
     fee: number;
   }[];
   systemSettings: {

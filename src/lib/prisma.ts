@@ -1,20 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@misael1981/rangooo-database";
 
-declare global {
-  var cachedPrisma: PrismaClient | undefined;
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const db = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = db;
 }
-
-const isProd = process.env.NODE_ENV === "production";
-
-export const prisma =
-  globalThis.cachedPrisma ??
-  new PrismaClient({
-    log: isProd ? ["error"] : ["warn", "error"],
-  });
-
-if (!isProd) {
-  globalThis.cachedPrisma = prisma;
-}
-
-export const db = prisma;
-export default prisma;

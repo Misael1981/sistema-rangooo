@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ownerSchema } from "@/schemas/onboarding-schema";
-import { AreaType, ContactNumber, PlanType } from "@prisma/client";
 import { MenuCategoryData } from "@/dtos/onboarding.dto";
 import z from "zod";
 import Step1OwnerData from "./steps/Step1OwnerData";
@@ -18,6 +17,11 @@ import {
 } from "@/dtos/restaurant-onboarding.dto";
 import { RestaurantFullDTO } from "@/dtos/restaurant-full-data.dto";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import {
+  AreaType,
+  ContactNumber,
+  PlanType,
+} from "@misael1981/rangooo-database";
 
 type OnboardingFormProps = {
   token: string;

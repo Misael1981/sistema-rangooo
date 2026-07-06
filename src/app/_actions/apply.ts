@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { formSchema } from "@/schemas/lead-schema";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { headers } from "next/headers";

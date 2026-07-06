@@ -1,4 +1,4 @@
-import db from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import OnboardingForm from "./components/OnboardingForm";
 import { getRestaurantMenuById } from "@/data/get-menu-category-by-id";

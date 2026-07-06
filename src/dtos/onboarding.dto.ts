@@ -1,5 +1,5 @@
 import { getRestaurantMenuById } from "@/data/get-menu-category-by-id";
-import { RestaurantCategory } from "@prisma/client";
+import { RestaurantCategory } from "@misael1981/rangooo-database";
 
 export type MenuWithProducts = Awaited<
   ReturnType<typeof getRestaurantMenuById>

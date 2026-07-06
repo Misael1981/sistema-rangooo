@@ -1,12 +1,12 @@
 "use server";
 
-import db from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function syncOnboardingStep(
   restaurantId: string,
   step: number,
-  data: any,
+  data: Record<string, unknown>
 ) {
   try {
     await db.restaurant.update({

@@ -22,8 +22,8 @@ import {
   generalInfoSchema,
 } from "@/schemas/onboarding-schema";
 import z from "zod";
-import { ContactNumber } from "@prisma/client";
 import { RestaurantOnboardingDTO } from "@/dtos/restaurant-onboarding.dto";
+import { ContactDTO } from "@/dtos/restaurant-full-data.dto";
 
 type Step2Payload = {
   restaurantId: string;
@@ -42,7 +42,7 @@ type Step2EstablishmentDataProps = {
     phone: string;
     onboardingStep?: number;
   };
-  contacts: ContactNumber[] | null;
+  contacts: ContactDTO[] | null;
   onSuccess: () => void;
   onBack: () => void;
   initialRestaurantData: RestaurantOnboardingDTO | null;

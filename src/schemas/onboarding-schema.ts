@@ -1,9 +1,4 @@
-import {
-  AreaType,
-  ContactType,
-  PlanType,
-  RestaurantCategory,
-} from "@prisma/client";
+import { AREA, CONTACT, PLAN, RESTAURANT_CATEGORY } from "@/constants/domain";
 import z from "zod";
 
 export const ownerSchema = z.object({
@@ -14,7 +9,7 @@ export const ownerSchema = z.object({
 
 export const generalInfoSchema = z.object({
   name: z.string().min(2, "Nome obrigatório."),
-  category: z.enum(RestaurantCategory, {
+  category: z.enum(RESTAURANT_CATEGORY, {
     message: "Selecione uma categoria válida",
   }),
   slug: z.string().min(2, "Campo obrigatório."),
@@ -35,7 +30,7 @@ export const establishmentContactInfoSchema = z.object({
   contacts: z
     .array(
       z.object({
-        type: z.nativeEnum(ContactType),
+        type: z.nativeEnum(CONTACT),
         number: z.string().min(10, "Número inválido"),
         isPrimary: z.boolean(),
       }),
@@ -101,13 +96,13 @@ export const methodsSchema = z
   );
 
 export const plansSchema = z.object({
-  plan: z.enum(PlanType, {
+  plan: z.enum(PLAN, {
     message: "Selecione um plano válido",
   }),
   useRangoooDelivery: z.boolean(),
   deliveryFees: z.array(
     z.object({
-      areaType: z.enum(AreaType),
+      areaType: z.enum(AREA),
       fee: z.number().min(0),
     }),
   ),

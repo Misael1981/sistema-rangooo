@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { gallerySchema } from "@/schemas/onboarding-schema";
 import { revalidatePath } from "next/cache";
 

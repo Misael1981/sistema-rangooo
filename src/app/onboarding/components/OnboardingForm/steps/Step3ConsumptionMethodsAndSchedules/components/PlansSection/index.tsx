@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { buildInitialFees, buildSystemFees } from "@/constants/map-enums";
+import { AreaTypeDTO } from "@/dtos/restaurant-onboarding.dto";
 import { PLANS_DETAILS } from "@/maps/methods-restaurant-options";
 import { plansSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AreaType, PlanType } from "@prisma/client";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -22,10 +24,10 @@ import z from "zod";
 type PlansSectionProps = {
   restaurantId: string;
   token: string;
-  plan: PlanType | undefined;
+  plan: "BASICO" | "PRO" | undefined;
   useRangoooDelivery: boolean;
   deliveryAreas: {
-    areaType: AreaType;
+    areaType: AreaTypeDTO;
     fee: number;
   }[];
   systemSettings: {
@@ -43,11 +45,9 @@ const PlansSection = ({
   deliveryAreas,
   systemSettings,
 }: PlansSectionProps) => {
-  const initialFees = [AreaType.URBAN, AreaType.RURAL, AreaType.DISTRICT].map(
-    (type) => ({
-      areaType: type,
-      fee: deliveryAreas.find((a) => a.areaType === type)?.fee || 0,
-    }),
+  const initialFees = useMemo(
+    () => buildInitialFees(deliveryAreas),
+    [deliveryAreas],
   );
 
   /* ---------------------------------- */
@@ -63,8 +63,6 @@ const PlansSection = ({
     },
   });
 
-  console.log("Plano: ", systemSettings);
-
   const selectedPlan = form.watch("plan");
   const isRangooo = form.watch("useRangoooDelivery");
 
@@ -73,11 +71,7 @@ const PlansSection = ({
       ...data,
       deliveryFees:
         data.useRangoooDelivery && systemSettings
-          ? [
-              { areaType: AreaType.URBAN, fee: systemSettings.URBAN },
-              { areaType: AreaType.RURAL, fee: systemSettings.RURAL },
-              { areaType: AreaType.DISTRICT, fee: systemSettings.DISTRICT },
-            ]
+          ? buildSystemFees(systemSettings)
           : data.deliveryFees,
     };
 
@@ -145,7 +139,7 @@ const PlansSection = ({
         {/* ============================= */}
         {/* 🚚 LOGÍSTICA PRO */}
         {/* ============================= */}
-        {selectedPlan === PlanType.PRO && (
+        {selectedPlan === "PRO" && (
           <Controller
             name="useRangoooDelivery"
             control={form.control}
@@ -174,7 +168,7 @@ const PlansSection = ({
         {/* ============================= */}
         {/* 💰 TAXAS PERSONALIZADAS */}
         {/* ============================= */}
-        {(!isRangooo || selectedPlan === PlanType.BASICO) && (
+        {(!isRangooo || selectedPlan === "BASICO") && (
           <div className="pt-4 border-t space-y-4">
             <h4 className="font-semibold text-sm">Suas Taxas de Entrega</h4>
 
@@ -225,7 +219,7 @@ const PlansSection = ({
         {/* ============================= */}
         {/* 🚀 LOGÍSTICA RANGOOO ATIVA */}
         {/* ============================= */}
-        {isRangooo && selectedPlan === PlanType.PRO && systemSettings && (
+        {isRangooo && selectedPlan === "PRO" && systemSettings && (
           <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-sm text-blue-800 space-y-2">
             <p className="font-bold">🚀 Logística Rangooo Ativada</p>
             <p>Seus clientes pagarão as taxas oficiais:</p>

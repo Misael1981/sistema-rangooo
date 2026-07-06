@@ -15,19 +15,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { CATEGORY_LABELS } from "@/maps/maps-labels";
 import { generalInfoSchema } from "@/schemas/onboarding-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlanType, RestaurantCategory } from "@prisma/client";
 import { useEffect } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
-const RestaurantCategoryList = [
+type GeneralInformationFormValues = {
+  name: string;
+  category: "RESTAURANT" | "PIZZARIA" | "HAMBURGUERIA" | "SORVETERIA" | "ADEGA";
+  slug: string;
+  description?: string;
+};
+
+const RestaurantCategoryList: GeneralInformationFormValues["category"][] = [
   "RESTAURANT",
   "PIZZARIA",
   "HAMBURGUERIA",
   "SORVETERIA",
   "ADEGA",
-] as const;
+];
 
 type GeneralInformationProps = {
   defaultValues?: z.infer<typeof generalInfoSchema>;
@@ -40,12 +46,12 @@ const GeneralInformation = ({
   defaultValues,
   restaurantId,
 }: GeneralInformationProps) => {
-  const form = useForm<z.infer<typeof generalInfoSchema>>({
+  const form = useForm<GeneralInformationFormValues>({
     resolver: zodResolver(generalInfoSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
-      category: RestaurantCategory.RESTAURANT,
+      category: RestaurantCategoryList[0],
       slug: "",
       description: "",
     },

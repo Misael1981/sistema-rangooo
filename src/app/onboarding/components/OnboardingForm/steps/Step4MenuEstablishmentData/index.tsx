@@ -12,7 +12,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useReducer } from "react";
 import MenuCategoriesList from "./components/MenuCategoriesList";
 import { MenuCategoryData, Products } from "@/dtos/onboarding.dto";
-import { Restaurant } from "@prisma/client";
 import SelectedTableName from "./components/SelectedTableName";
 import AdditionalProductsCard from "./components/AdditionalProductsCard";
 import ProductsListSession from "./components/ProductsListSession";

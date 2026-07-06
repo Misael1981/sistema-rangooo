@@ -1,9 +1,17 @@
+import { $Enums } from "@misael1981/rangooo-database";
+
 export interface ContactDTO {
-  id: string;
   number: string;
-  type: string;
+  type: $Enums.ContactType;
   isPrimary: boolean;
+  id: string;
+  restaurantId: string;
+  label: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+export type ContactTypeDTO = "PHONE" | "WHATSAPP";
 
 export interface PaymentMethodDTO {
   id: string;
@@ -51,6 +59,8 @@ export interface BusinessHourDTO {
   isClosed: boolean;
   timeSlots: TimeSlotDTO[];
 }
+
+export type AreaTypeDTO = "URBAN" | "RURAL" | "DISTRICT";
 
 export interface RestaurantOnboardingDTO {
   id: string;

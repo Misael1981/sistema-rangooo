@@ -1,9 +1,11 @@
-import { PlanType, RestaurantCategory } from "@prisma/client";
+import {
+  PLAN,
+  type PlanType,
+  RESTAURANT_CATEGORY,
+  type RestaurantCategory,
+} from "@/constants/domain";
 
-export const CATEGORY_LABELS: Record<
-  (typeof RestaurantCategory)[keyof typeof RestaurantCategory],
-  string
-> = {
+export const CATEGORY_LABELS: Record<RestaurantCategory, string> = {
   RESTAURANT: "Restaurante",
   PIZZARIA: "Pizzaria",
   HAMBURGUERIA: "Hamburgueria",
@@ -12,6 +14,6 @@ export const CATEGORY_LABELS: Record<
 };
 
 export const PLANS_RESTAURANT: Record<PlanType, string> = {
-  [PlanType.BASICO]: "Básico",
-  [PlanType.PRO]: "Pró",
+  [PLAN.BASICO]: "Básico",
+  [PLAN.PRO]: "Pró",
 };
