@@ -49,15 +49,18 @@ const FeaturesSection = () => {
 
           <div className="relative">
             <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-2xl">
-              <div className="flex aspect-video items-center justify-center rounded-xl bg-linear-to-br from-orange-50 to-red-50">
-                <div className="text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-500">
-                    <span className="text-2xl text-white">📊</span>
-                  </div>
-                  <p className="font-semibold text-gray-600">
-                    Painel de Controle Demonstrativo
-                  </p>
-                </div>
+              <div className="overflow-hidden rounded-2xl bg-black shadow-2xl">
+                <video
+                  className=" w-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                >
+                  <source src="/videos/admin.mp4" type="video/mp4" />
+                  Seu navegador não suporta vídeos.
+                </video>
               </div>
             </div>
           </div>

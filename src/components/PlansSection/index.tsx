@@ -21,6 +21,7 @@ const featuresPro = [
   "Pedido enviado automaticamente ao entregador",
   "Controle de status da entrega em tempo real",
   "Organização da logística do delivery",
+  "SDK para controle de produção",
 ];
 
 const PlansSection = () => {
