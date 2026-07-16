@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 
 const ButtonSuccessOnboarding = ({ slug }: { slug: string }) => {
   const handleRedirect = () => {
-    window.location.href = `https://admin-rangooo.vercel.app/${slug}`;
+    window.location.href = `https://admin-estabelecimentos-rangooo.vercel.app/${slug}`;
   };
 
   return (
